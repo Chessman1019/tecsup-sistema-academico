@@ -1,6 +1,7 @@
 package pe.edu.tecsup.sistemaacademico.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pe.edu.tecsup.sistemaacademico.security.CustomUserDetailsService;
 import pe.edu.tecsup.sistemaacademico.security.JwtAuthFilter;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -30,6 +32,15 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final CustomUserDetailsService userDetailsService;
+
+    /**
+     * Origenes permitidos para CORS. En local usa el default (localhost:4200).
+     * En produccion se define con la variable de entorno CORS_ORIGINS,
+     * por ejemplo: https://tecsup-academico.vercel.app
+     * (varios origenes separados por coma)
+     */
+    @Value("${CORS_ORIGINS:http://localhost:4200}")
+    private String corsOrigins;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -68,7 +79,6 @@ public class SecurityConfig {
                             "script-src 'self'; " +
                             "style-src 'self' 'unsafe-inline'; " +
                             "img-src 'self' data:; " +
-                            "connect-src 'self' http://localhost:4200; " +
                             "frame-ancestors 'none'"))
                     .referrerPolicy(referrer -> referrer
                             .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
@@ -77,6 +87,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/**").permitAll()
 
+                    // Swagger: desactivado por properties en produccion
+                    // (springdoc.*.enabled=false salvo SWAGGER_ENABLED=true)
                     .requestMatchers(
                             "/swagger-ui/**",
                             "/swagger-ui.html",
@@ -103,8 +115,13 @@ public class SecurityConfig {
                             "JEFE_GESTION_ACADEMICA", "ADMIN")
 
                     // ===================== ESTUDIANTES =====================
-                    .requestMatchers("/estudiantes/**").hasAnyRole(
+                    // FIX anti-IDOR: ESTUDIANTE solo accede a SU perfil (/me).
+                    // Antes podia listar los datos personales de todos los alumnos.
+                    .requestMatchers("/estudiantes/me").hasAnyRole(
                             "ESTUDIANTE", "ASISTENTE_REGISTRO", "COORDINADOR_ACADEMICO",
+                            "JEFE_GESTION_ACADEMICA", "ADMIN")
+                    .requestMatchers("/estudiantes/**").hasAnyRole(
+                            "ASISTENTE_REGISTRO", "COORDINADOR_ACADEMICO",
                             "JEFE_GESTION_ACADEMICA", "ADMIN")
 
                     // ===================== CURSOS =====================
@@ -164,10 +181,17 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/certificados/**").hasAnyRole(
                             "ESTUDIANTE", "ASISTENTE_REGISTRO", "ADMIN")
 
-                    // ===================== PAGOS Y DOCUMENTOS =====================
-                    .requestMatchers("/pagos/**").hasAnyRole(
+                    // ===================== PAGOS =====================
+                    // FIX anti-IDOR: ESTUDIANTE solo accede a SUS pagos (/me).
+                    // Antes podia listar todos los pagos y ver los de otro alumno por ID.
+                    .requestMatchers("/pagos/me").hasAnyRole(
                             "ESTUDIANTE", "ASISTENTE_REGISTRO", "COORDINADOR_ACADEMICO",
                             "JEFE_GESTION_ACADEMICA", "ADMIN")
+                    .requestMatchers("/pagos/**").hasAnyRole(
+                            "ASISTENTE_REGISTRO", "COORDINADOR_ACADEMICO",
+                            "JEFE_GESTION_ACADEMICA", "ADMIN")
+
+                    // ===================== DOCUMENTOS =====================
                     .requestMatchers("/documentos/**").hasAnyRole(
                             "ESTUDIANTE", "ASISTENTE_REGISTRO", "ADMIN")
 
@@ -198,7 +222,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList(corsOrigins.split(",")));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
