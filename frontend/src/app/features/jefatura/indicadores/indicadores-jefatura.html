@@ -1,0 +1,45 @@
+<div class="indicadores-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Indicadores</h1>
+      <p class="pagina-subtitulo">Demanda de matrícula por curso en el ciclo actual.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Calculando indicadores...</p>
+    </div>
+  } @else if (indicadoresPorCurso().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📈</div>
+      <p class="vacio-pro-texto">Aún no hay matrículas activas para generar indicadores.</p>
+    </div>
+  } @else {
+    <section class="card-pro">
+      <h3 class="grafico-titulo">Matriculados por curso</h3>
+
+      <div class="grafico-barras">
+        @for (ind of indicadoresPorCurso(); track ind.nombreCurso) {
+          <div class="barra-fila">
+            <span class="barra-etiqueta">{{ ind.nombreCurso }}</span>
+            <div class="barra-zona">
+              <div class="barra-fondo">
+                <div class="barra-valor" [style.width.%]="calcularAnchoBarra(ind.totalMatriculados)"></div>
+              </div>
+              <span class="barra-numero">{{ ind.totalMatriculados }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <p class="grafico-nota">💡 El curso con mayor demanda define la escala del gráfico. Datos en base a matrículas activas.</p>
+    </section>
+  }
+
+</div>

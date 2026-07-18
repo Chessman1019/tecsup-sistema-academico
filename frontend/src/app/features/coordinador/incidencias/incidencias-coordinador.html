@@ -1,0 +1,196 @@
+<div class="incidencias-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">
+        Incidencias
+        @if (totalAbiertas() > 0) {
+          <span class="badge badge-advertencia">{{ totalAbiertas() }} abierta(s)</span>
+        }
+      </h1>
+      <p class="pagina-subtitulo">Registra y da seguimiento a incidencias académicas.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nueva Incidencia</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Filtros -->
+  <div class="filtros-tabs">
+    <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'todas'" (click)="cambiarFiltro('todas')">
+      Todas
+    </button>
+    <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'Abierta'" (click)="cambiarFiltro('Abierta')">
+      Abiertas
+    </button>
+    <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'En proceso'" (click)="cambiarFiltro('En proceso')">
+      En proceso
+    </button>
+    <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'Resuelta'" (click)="cambiarFiltro('Resuelta')">
+      Resueltas
+    </button>
+  </div>
+
+  <!-- Lista de incidencias -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando incidencias...</p>
+    </div>
+  } @else if (incidenciasFiltradas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">⚠️</div>
+      <p class="vacio-pro-texto">No hay incidencias en esta categoría.</p>
+    </div>
+  } @else {
+    <div class="incidencias-lista">
+      @for (i of incidenciasFiltradas(); track i.idIncidencia) {
+        <div class="incidencia-card">
+
+          <div class="incidencia-header">
+            <div class="incidencia-badges">
+              <span class="badge" [ngClass]="obtenerClaseEstado(i.estado)">● {{ i.estado }}</span>
+              <span class="badge" [ngClass]="obtenerClasePrioridad(i.prioridad)">{{ i.prioridad }}</span>
+              <span class="badge badge-neutro">{{ i.tipo }}</span>
+            </div>
+            <span class="incidencia-fecha">{{ i.fechaCreacion | date:'dd MMM yyyy' }}</span>
+          </div>
+
+          <h3 class="incidencia-titulo">{{ i.titulo }}</h3>
+          <p class="incidencia-descripcion">{{ i.descripcion }}</p>
+
+          @if (i.nombreDocente || i.nombreCurso) {
+            <div class="incidencia-relacionados">
+              @if (i.nombreDocente) {
+                <span class="incidencia-relacion">🧑‍🏫 {{ i.nombreDocente }}</span>
+              }
+              @if (i.nombreCurso) {
+                <span class="incidencia-relacion">📚 {{ i.nombreCurso }}</span>
+              }
+            </div>
+          }
+
+          @if (i.estado !== 'Resuelta') {
+            <div class="incidencia-acciones">
+              <button class="btn btn-primario btn-sm" (click)="pedirAvance(i)">
+                {{ i.estado === 'Abierta' ? 'Iniciar atención' : 'Marcar como resuelta' }}
+              </button>
+            </div>
+          } @else if (i.fechaResolucion) {
+            <p class="incidencia-resuelta">✓ Resuelta el {{ i.fechaResolucion | date:'dd MMM yyyy' }}</p>
+          }
+
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal: nueva incidencia -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card modal-card-ancha" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-peligro">⚠️</div>
+          <h2 class="modal-titulo">Nueva Incidencia</h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Título</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="tituloNuevo()"
+              (ngModelChange)="tituloNuevo.set($event)"
+              placeholder="ej. Aula sin proyector funcional"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">Descripción</label>
+            <textarea
+              class="form-textarea"
+              rows="3"
+              [ngModel]="descripcionNueva()"
+              (ngModelChange)="descripcionNueva.set($event)"
+              placeholder="Describe la incidencia con el detalle necesario..."></textarea>
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Tipo</label>
+              <select class="form-select" [(ngModel)]="tipoNuevo">
+                <option value="Académica">Académica</option>
+                <option value="Administrativa">Administrativa</option>
+                <option value="Disciplinaria">Disciplinaria</option>
+                <option value="Infraestructura">Infraestructura</option>
+              </select>
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Prioridad</label>
+              <select class="form-select" [(ngModel)]="prioridadNueva">
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Docente relacionado <span class="form-label-nota">(opcional)</span></label>
+              <select class="form-select" [(ngModel)]="docenteSeleccionado">
+                <option value="">Ninguno</option>
+                @for (d of docentes(); track d.idDocente) {
+                  <option [value]="d.idDocente">{{ d.nombres }} {{ d.apellidos }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Curso relacionado <span class="form-label-nota">(opcional)</span></label>
+              <select class="form-select" [(ngModel)]="cursoSeleccionado">
+                <option value="">Ninguno</option>
+                @for (c of cursos(); track c.idCurso) {
+                  <option [value]="c.idCurso">{{ c.nombre }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="crearIncidencia()" [disabled]="guardando()">
+            {{ guardando() ? 'Registrando...' : 'Registrar incidencia' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Confirmación: avanzar estado -->
+  <app-modal-confirmacion
+    [visible]="incidenciaAAvanzar() !== null"
+    [tipo]="incidenciaAAvanzar()?.estado === 'En proceso' ? 'exito' : 'info'"
+    [titulo]="incidenciaAAvanzar()?.estado === 'En proceso' ? 'Marcar como resuelta' : 'Iniciar atención'"
+    [mensaje]="incidenciaAAvanzar()?.estado === 'En proceso'
+      ? '¿Confirmas que la incidencia <strong>' + incidenciaAAvanzar()?.titulo + '</strong> quedó resuelta? Se registrará la fecha de resolución.'
+      : '¿Deseas iniciar la atención de <strong>' + incidenciaAAvanzar()?.titulo + '</strong>? Pasará al estado En proceso.'"
+    [textoConfirmar]="incidenciaAAvanzar()?.estado === 'En proceso' ? 'Sí, resolver' : 'Sí, iniciar'"
+    [procesando]="avanzando()"
+    (confirmar)="confirmarAvance()"
+    (cancelar)="incidenciaAAvanzar.set(null)"
+  />
+
+</div>

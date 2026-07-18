@@ -1,0 +1,199 @@
+.estudiantes-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 6px 0;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid #F5C6CB;
+}
+
+/* ===================== Toolbar ===================== */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 220px;
+  max-width: 360px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 10px 16px;
+}
+
+.search-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  outline: none;
+  min-width: 0;
+}
+
+.filtro-select {
+  padding: 9px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-family);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.resultado-count {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* ===================== Estados ===================== */
+.loading-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 60px 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 42px;
+}
+
+/* ===================== Tabla ===================== */
+.table-wrapper {
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.estudiantes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.estudiantes-table th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.estudiantes-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.estudiantes-table tr:last-child td {
+  border-bottom: none;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+/* ===================== Movil ===================== */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: none;
+  }
+
+  .resultado-count {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .estudiantes-table thead {
+    display: none;
+  }
+
+  .estudiantes-table,
+  .estudiantes-table tbody,
+  .estudiantes-table tr,
+  .estudiantes-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .estudiantes-table tr {
+    margin: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .estudiantes-table td {
+    border-bottom: none;
+    padding: 6px 4px;
+  }
+}

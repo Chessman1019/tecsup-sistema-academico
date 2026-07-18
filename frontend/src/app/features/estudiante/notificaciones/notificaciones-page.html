@@ -1,0 +1,65 @@
+<div class="notificaciones-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">
+        Notificaciones
+        @if (totalNoLeidas() > 0) {
+          <span class="badge badge-peligro">{{ totalNoLeidas() }} nueva(s)</span>
+        }
+      </h1>
+      <p class="pagina-subtitulo">Avisos del sistema sobre tu actividad académica.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Filtros -->
+  <div class="filtros-tabs">
+    <button class="filtro-tab" [class.filtro-activo]="filtroActivo() === 'todas'" (click)="cambiarFiltro('todas')">
+      Todas
+    </button>
+    <button class="filtro-tab" [class.filtro-activo]="filtroActivo() === 'no-leidas'" (click)="cambiarFiltro('no-leidas')">
+      No leídas
+    </button>
+    <button class="filtro-tab" [class.filtro-activo]="filtroActivo() === 'leidas'" (click)="cambiarFiltro('leidas')">
+      Leídas
+    </button>
+  </div>
+
+  <!-- Lista -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tus notificaciones...</p>
+    </div>
+  } @else if (notificacionesFiltradas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🔔</div>
+      <p class="vacio-pro-texto">No tienes notificaciones en esta categoría.</p>
+    </div>
+  } @else {
+    <div class="notificaciones-lista">
+      @for (n of notificacionesFiltradas(); track n.idNotificacion) {
+        <div
+          class="notificacion-card"
+          [class.notificacion-no-leida]="!n.leida"
+          (click)="marcarComoLeida(n)">
+          <div class="notificacion-icono">🔔</div>
+          <div class="notificacion-cuerpo">
+            <div class="notificacion-encabezado">
+              <p class="notificacion-titulo">{{ n.titulo }}</p>
+              @if (!n.leida) {
+                <span class="punto-nuevo"></span>
+              }
+            </div>
+            <p class="notificacion-mensaje">{{ n.mensaje }}</p>
+            <p class="notificacion-fecha">{{ n.fechaEnvio | date:'dd MMM yyyy, h:mm a' }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

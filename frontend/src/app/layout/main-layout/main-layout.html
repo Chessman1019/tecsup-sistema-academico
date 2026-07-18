@@ -1,0 +1,18 @@
+<div class="layout-container">
+  <app-sidebar
+    [abierto]="sidebarAbierto()"
+    (cerrar)="cerrarSidebar()"
+  ></app-sidebar>
+
+  @if (sidebarAbierto()) {
+    <div class="overlay" (click)="cerrarSidebar()"></div>
+  }
+
+  <div class="layout-main">
+    <app-navbar (menuToggle)="toggleSidebar()"></app-navbar>
+
+    <main class="layout-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

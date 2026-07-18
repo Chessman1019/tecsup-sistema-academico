@@ -1,0 +1,127 @@
+<div class="matricula-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Matrícula</h1>
+      <p class="pagina-subtitulo">Inscríbete en los cursos disponibles del ciclo {{ cicloAcademicoActual }}.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Paso 1: elegir curso -->
+  <section class="card-pro seccion-matricula">
+    <h2 class="seccion-titulo"><span class="paso-numero">1</span> Elige un curso</h2>
+
+    <div class="form-grupo curso-select-grupo">
+      <select class="form-select" [(ngModel)]="cursoSeleccionado" (ngModelChange)="onCursoChange()">
+        <option value="">Selecciona un curso disponible...</option>
+        @for (c of cursos(); track c.idCurso) {
+          <option [value]="c.idCurso">{{ c.codigoCurso }} — {{ c.nombre }} ({{ c.creditos }} créditos)</option>
+        }
+      </select>
+    </div>
+
+    <!-- Paso 2: elegir horario -->
+    @if (cursoSeleccionado()) {
+      <h2 class="seccion-titulo"><span class="paso-numero">2</span> Elige un horario</h2>
+
+      @if (cargandoHorarios()) {
+        <p class="celda-secundaria">Cargando horarios disponibles...</p>
+      } @else if (horarios().length === 0) {
+        <div class="vacio-pro vacio-compacto">
+          <p class="vacio-pro-texto">Este curso no tiene horarios disponibles por ahora.</p>
+        </div>
+      } @else {
+        <div class="horarios-grid">
+          @for (h of horarios(); track h.idHorario) {
+            <button
+              class="horario-card"
+              [class.horario-card-activo]="horarioSeleccionado() === h.idHorario"
+              (click)="seleccionarHorario(h.idHorario)">
+              <span class="horario-card-dia">
+                {{ obtenerNombreDia(h.diaSemana) }} · {{ h.horaInicio }} – {{ h.horaFin }}
+              </span>
+              <span class="horario-card-detalle">👨‍🏫 {{ h.nombreDocente }}</span>
+              <span class="horario-card-detalle">🏫 Aula {{ h.codigoAula }}</span>
+            </button>
+          }
+        </div>
+
+        <div class="acciones-matricula">
+          <button
+            class="btn btn-primario"
+            (click)="onMatricular()"
+            [disabled]="!horarioSeleccionado() || matriculando()">
+            {{ matriculando() ? 'Matriculando...' : 'Confirmar matrícula' }}
+          </button>
+        </div>
+      }
+    }
+  </section>
+
+  <!-- Mis matrículas -->
+  <section class="seccion-mis-matriculas">
+    <h2 class="seccion-titulo-fuera">Mis matrículas del ciclo</h2>
+
+    @if (misMatriculas().length === 0) {
+      <div class="card-pro vacio-pro">
+        <div class="vacio-pro-icono">📋</div>
+        <p class="vacio-pro-texto">Aún no tienes matrículas registradas este ciclo.</p>
+      </div>
+    } @else {
+      <div class="matriculas-grid">
+        @for (m of misMatriculas(); track m.idMatricula) {
+          <div class="matricula-card" [class.matricula-retirada]="m.estado === 'Retirado'">
+            <div class="matricula-card-header">
+              <div>
+                <p class="matricula-curso">{{ m.nombreCurso }}</p>
+                <p class="matricula-codigo">{{ m.codigoCurso }} · {{ m.cicloAcademico }}</p>
+              </div>
+              @if (m.estado === 'Activo') {
+                <span class="badge badge-exito">● Activo</span>
+              } @else if (m.estado === 'Retirado') {
+                <span class="badge badge-peligro">● Retirado</span>
+              } @else {
+                <span class="badge badge-neutro">{{ m.estado }}</span>
+              }
+            </div>
+
+            <div class="matricula-card-detalles">
+              <span class="matricula-detalle">🗓️ {{ obtenerNombreDia(m.diaSemana) }} {{ m.horaInicio }} – {{ m.horaFin }}</span>
+              <span class="matricula-detalle">👨‍🏫 {{ m.nombreDocente }}</span>
+              <span class="matricula-detalle">🏫 Aula {{ m.codigoAula }}</span>
+            </div>
+
+            @if (m.estado === 'Activo') {
+              <div class="matricula-card-acciones">
+                <button class="btn btn-borde-peligro btn-sm" (click)="pedirRetiro(m)">
+                  Retirarme
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Confirmación: retirar matrícula -->
+  <app-modal-confirmacion
+    [visible]="matriculaARetirar() !== null"
+    tipo="peligro"
+    titulo="Retirarte del curso"
+    [mensaje]="'¿Seguro que deseas retirarte de <strong>' + matriculaARetirar()?.nombreCurso + '</strong>? Perderás tu vacante en el horario y esta acción quedará registrada.'"
+    textoConfirmar="Sí, retirarme"
+    [procesando]="retirando()"
+    (confirmar)="confirmarRetiro()"
+    (cancelar)="matriculaARetirar.set(null)"
+  />
+
+</div>

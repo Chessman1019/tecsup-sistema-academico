@@ -1,0 +1,128 @@
+<div class="horarios-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestión de Horarios</h1>
+      <p class="page-subtitle">Programa horarios asignando curso, docente y aula.</p>
+    </div>
+    <button class="btn-primary" (click)="toggleForm()">
+      @if (mostrandoForm()) {
+        Cancelar
+      } @else {
+        + Nuevo Horario
+      }
+    </button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alert alert-exito">{{ mensajeExito() }}</div>
+  }
+
+  @if (mostrandoForm()) {
+    <section class="card">
+      <h2 class="card-title">Nuevo Horario — Ciclo {{ cicloActual() }}</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Curso</label>
+          <select [(ngModel)]="cursoSeleccionado">
+            <option value="">Selecciona un curso</option>
+            @for (curso of cursos(); track curso.idCurso) {
+              <option [value]="curso.idCurso">{{ curso.codigoCurso }} - {{ curso.nombre }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Docente</label>
+          <select [(ngModel)]="docenteSeleccionado">
+            <option value="">Selecciona un docente</option>
+            @for (docente of docentes(); track docente.idDocente) {
+              <option [value]="docente.idDocente">{{ docente.nombres }} {{ docente.apellidos }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Aula</label>
+          <select [(ngModel)]="aulaSeleccionada">
+            <option value="">Selecciona un aula</option>
+            @for (aula of aulas(); track aula.idAula) {
+              <option [value]="aula.idAula">{{ aula.codigo }} ({{ aula.edificio }})</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Día de la semana</label>
+          <select [(ngModel)]="diaSeleccionado">
+            <option [value]="null">Selecciona un día</option>
+            @for (dia of diasSemana; track dia.valor) {
+              <option [value]="dia.valor">{{ dia.etiqueta }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Hora inicio</label>
+          <input type="time" [(ngModel)]="horaInicio" />
+        </div>
+
+        <div class="form-group">
+          <label>Hora fin</label>
+          <input type="time" [(ngModel)]="horaFin" />
+        </div>
+      </div>
+
+      <button class="btn-primary" (click)="crearHorario()" [disabled]="guardando()">
+        @if (guardando()) {
+          Guardando...
+        } @else {
+          Crear Horario
+        }
+      </button>
+    </section>
+  }
+
+  <section class="card">
+    <h2 class="card-title">Horarios registrados</h2>
+
+    @if (cargando()) {
+      <p class="loading-state">Cargando horarios...</p>
+    } @else if (horarios().length === 0) {
+      <p class="empty-state">No hay horarios registrados.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table class="horarios-table">
+          <thead>
+            <tr>
+              <th>Curso</th>
+              <th>Docente</th>
+              <th>Aula</th>
+              <th>Día</th>
+              <th>Horario</th>
+              <th>Ciclo</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (h of horarios(); track h.idHorario) {
+              <tr>
+                <td>{{ h.nombreCurso }}</td>
+                <td>{{ h.nombreDocente }}</td>
+                <td>{{ h.codigoAula }}</td>
+                <td>{{ obtenerNombreDia(h.diaSemana) }}</td>
+                <td>{{ h.horaInicio }} - {{ h.horaFin }}</td>
+                <td>{{ h.ciclo }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</div>

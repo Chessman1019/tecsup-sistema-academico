@@ -1,0 +1,66 @@
+<div class="estadisticas-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Estadísticas de Evaluación</h1>
+      <p class="pagina-subtitulo">Estado de las evaluaciones configuradas por curso y sus pesos.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Calculando estadísticas...</p>
+    </div>
+  } @else if (estadisticas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📉</div>
+      <p class="vacio-pro-texto">Aún no hay cursos con evaluaciones configuradas.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th class="th-centrado">Evaluaciones</th>
+            <th class="th-centrado">Peso total</th>
+            <th>Estado de configuración</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of estadisticas(); track e.nombreCurso) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ e.nombreCurso }}</span>
+              </td>
+              <td class="td-centrado">
+                <span class="badge badge-info">{{ e.totalEvaluaciones }}</span>
+              </td>
+              <td class="td-centrado">
+                <span class="badge" [ngClass]="obtenerClasePeso(e.pesoTotal)">
+                  {{ e.pesoTotal }}%
+                </span>
+              </td>
+              <td>
+                @if (e.pesoTotal === 100) {
+                  <span class="config-ok">✓ Pesos completos</span>
+                } @else if (e.pesoTotal < 100) {
+                  <span class="config-alerta">⚠️ Falta {{ 100 - e.pesoTotal }}% por asignar</span>
+                } @else {
+                  <span class="config-error">✗ Excede en {{ e.pesoTotal - 100 }}%</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="estadisticas-nota">💡 Un curso bien configurado debe tener evaluaciones cuyos pesos sumen exactamente 100%.</p>
+  }
+
+</div>

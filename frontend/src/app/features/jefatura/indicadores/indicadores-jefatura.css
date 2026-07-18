@@ -1,0 +1,77 @@
+.indicadores-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ===== Título del gráfico ===== */
+.grafico-titulo {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 0 0 20px 0;
+}
+
+/* ===== Gráfico de barras horizontal ===== */
+.grafico-barras {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.barra-fila {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barra-etiqueta {
+  font-family: var(--font-titulos);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.barra-zona {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.barra-fondo {
+  flex: 1;
+  height: 22px;
+  background: #EEF2F6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.barra-valor {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary) 0%, #33B5E8 100%);
+  border-radius: 8px;
+  animation: crecer-barra 0.7s ease;
+  min-width: 8px;
+}
+
+@keyframes crecer-barra {
+  from { width: 0 !important; }
+}
+
+.barra-numero {
+  font-family: var(--font-titulos);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  min-width: 34px;
+  text-align: right;
+}
+
+/* ===== Nota ===== */
+.grafico-nota {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  margin: 20px 0 0 0;
+  padding-top: 14px;
+  border-top: 1px solid #EEF2F6;
+  line-height: 1.5;
+}

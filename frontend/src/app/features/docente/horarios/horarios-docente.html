@@ -1,0 +1,45 @@
+<div class="horario-container">
+  <div class="page-header">
+    <h1 class="page-title">Mi Horario</h1>
+    <p class="page-subtitle">Consulta tus clases programadas por día de la semana.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando horario...</div>
+  } @else if (diasConHorario().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">🗓️</span>
+      <p>No tienes cursos asignados con horario.</p>
+    </div>
+  } @else {
+    <div class="dias-list">
+      @for (dia of diasConHorario(); track dia.dia) {
+        <div class="dia-card">
+          <h2 class="dia-titulo">{{ dia.dia }}</h2>
+          <div class="bloques-list">
+            @for (bloque of dia.bloques; track bloque.idHorario) {
+              <div class="bloque-item">
+                <div class="bloque-hora">
+                  <span class="hora-inicio">{{ bloque.horaInicio }}</span>
+                  <span class="hora-separador">—</span>
+                  <span class="hora-fin">{{ bloque.horaFin }}</span>
+                </div>
+                <div class="bloque-info">
+                  <p class="bloque-curso">{{ bloque.nombreCurso }}</p>
+                  <p class="bloque-detalle">
+                    <span class="detalle-item">🚪 Aula {{ bloque.codigoAula }}</span>
+                    <span class="detalle-item">📚 Ciclo {{ bloque.ciclo }}</span>
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

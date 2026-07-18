@@ -1,0 +1,137 @@
+<div class="asistencia-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Registro de Asistencia</h1>
+      <p class="pagina-subtitulo">Selecciona uno de tus horarios para registrar la asistencia de hoy.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Selector de horarios -->
+  @if (cargandoHorarios()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tus horarios...</p>
+    </div>
+  } @else if (horarios().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🗓️</div>
+      <p class="vacio-pro-texto">No tienes horarios asignados este ciclo.</p>
+    </div>
+  } @else {
+    <div class="horarios-grid">
+      @for (h of horarios(); track h.idHorario) {
+        <button
+          class="horario-card"
+          [class.horario-card-activo]="horarioSeleccionado()?.idHorario === h.idHorario"
+          (click)="seleccionarHorario(h)">
+          <span class="horario-card-curso">{{ h.nombreCurso }}</span>
+          <span class="horario-card-detalle">{{ h.horaInicio }} – {{ h.horaFin }} · Aula {{ h.codigoAula }}</span>
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Lista de asistencia -->
+  @if (horarioSeleccionado()) {
+
+    @if (cargandoRegistros()) {
+      <div class="card-pro vacio-pro">
+        <p class="vacio-pro-texto">Cargando estudiantes...</p>
+      </div>
+    } @else if (registros().length === 0) {
+      <div class="card-pro vacio-pro">
+        <div class="vacio-pro-icono">👥</div>
+        <p class="vacio-pro-texto">No hay estudiantes matriculados activos en este horario.</p>
+      </div>
+    } @else {
+
+      <!-- Encabezado de sesión + resumen -->
+      <div class="sesion-header">
+        <div class="sesion-info">
+          @if (sesionActual(); as sesion) {
+            <span class="badge badge-oscuro">Semana {{ sesion.semana }}</span>
+            <span class="sesion-fecha">{{ sesion.fechaSesion | date:'EEEE dd MMMM yyyy' }}</span>
+          }
+        </div>
+
+        <div class="resumen-stats">
+          <span class="stat stat-presente">{{ totalPresentes() }} Presentes</span>
+          <span class="stat stat-ausente">{{ totalAusentes() }} Ausentes</span>
+          <span class="stat stat-tardanza">{{ totalTardanzas() }} Tardanzas</span>
+          <span class="stat stat-pendiente">{{ totalPendientes() }} Sin marcar</span>
+        </div>
+      </div>
+
+      <!-- Tabla de estudiantes -->
+      <div class="tabla-container">
+        <table class="tabla-pro">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th class="th-centrado">Asistencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of registros(); track r.idMatricula) {
+              <tr>
+                <td>
+                  <div class="estudiante-celda">
+                    <div class="estudiante-avatar">
+                      {{ r.nombreEstudiante.charAt(0) }}
+                    </div>
+                    <div>
+                      <span class="celda-principal">{{ r.nombreEstudiante }}</span>
+                      <span class="celda-secundaria">{{ r.codigoAlumno }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="asistencia-botones">
+                    <button
+                      class="btn-asistencia btn-p"
+                      [class.btn-p-activo]="r.estado === 'P'"
+                      (click)="marcarEstado(r.idMatricula, 'P')">
+                      Presente
+                    </button>
+                    <button
+                      class="btn-asistencia btn-t"
+                      [class.btn-t-activo]="r.estado === 'T'"
+                      (click)="marcarEstado(r.idMatricula, 'T')">
+                      Tardanza
+                    </button>
+                    <button
+                      class="btn-asistencia btn-a"
+                      [class.btn-a-activo]="r.estado === 'A'"
+                      (click)="marcarEstado(r.idMatricula, 'A')">
+                      Ausente
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Acciones -->
+      <div class="acciones-finales">
+        <button class="btn btn-borde" (click)="marcarTodosPresentes()" [disabled]="guardando()">
+          ✓ Marcar todos presentes
+        </button>
+        <button class="btn btn-primario" (click)="guardarAsistencia()" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : 'Guardar asistencia' }}
+        </button>
+      </div>
+
+    }
+  }
+
+</div>

@@ -1,0 +1,84 @@
+<div class="matriculas-container">
+  <div class="page-header">
+    <h1 class="page-title">Supervisión de Matrículas</h1>
+    <p class="page-subtitle">Consulta el estado de las matrículas registradas en el sistema.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-success">✅</div>
+      <div class="stat-content">
+        <div class="stat-label">Matrículas Activas</div>
+        <div class="stat-value">{{ totalActivas() }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-muted">🚫</div>
+      <div class="stat-content">
+        <div class="stat-label">Matrículas Retiradas</div>
+        <div class="stat-value">{{ totalRetiradas() }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar estudiante o curso..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filtros">
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'todos'" (click)="cambiarFiltro('todos')">Todos</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'activo'" (click)="cambiarFiltro('activo')">Activas</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'retirado'" (click)="cambiarFiltro('retirado')">Retiradas</button>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando matrículas...</div>
+  } @else if (matriculasFiltradas().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">📋</span>
+      <p>No se encontraron matrículas.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="matriculas-table">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Curso</th>
+            <th>Ciclo</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of matriculasFiltradas(); track m.idMatricula) {
+            <tr>
+              <td>{{ m.codigoAlumno }} - {{ m.nombreCompletoEstudiante }}</td>
+              <td>{{ m.codigoCurso }} - {{ m.nombreCurso }}</td>
+              <td>{{ m.cicloAcademico }}</td>
+              <td>{{ m.fechaMatricula | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="badge" [class.badge-activo]="m.estado === 'Activo'" [class.badge-retirado]="m.estado === 'Retirado'">
+                  {{ m.estado }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

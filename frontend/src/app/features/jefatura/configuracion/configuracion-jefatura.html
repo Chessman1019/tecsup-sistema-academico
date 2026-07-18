@@ -1,0 +1,72 @@
+<div class="config-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Configuración Institucional</h1>
+      <p class="page-subtitle">Administra los parámetros generales del sistema académico.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alert alert-exito">{{ mensajeExito() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="estado-vacio">Cargando parámetros...</div>
+  } @else if (grupos().length === 0) {
+    <div class="estado-vacio">
+      <div class="estado-icono">⚙️</div>
+      <p>No hay parámetros de configuración registrados.</p>
+    </div>
+  } @else {
+    @for (grupo of grupos(); track grupo.categoria) {
+      <section class="card grupo-card">
+        <h2 class="card-title">{{ grupo.categoria }}</h2>
+
+        @for (config of grupo.parametros; track config.idConfiguracion) {
+          <div class="parametro-fila">
+            <div class="parametro-info">
+              <span class="parametro-clave">{{ config.clave }}</span>
+              <span class="parametro-descripcion">{{ config.descripcion }}</span>
+            </div>
+
+            @if (editandoId() === config.idConfiguracion) {
+              <div class="parametro-edicion">
+                <input
+                  type="text"
+                  class="input-valor"
+                  [ngModel]="valorEditado()"
+                  (ngModelChange)="valorEditado.set($event)"
+                  (keyup.enter)="guardar(config)"
+                />
+                <button
+                  class="btn-primary btn-chico"
+                  (click)="guardar(config)"
+                  [disabled]="guardando()">
+                  @if (guardando()) {
+                    Guardando...
+                  } @else {
+                    Guardar
+                  }
+                </button>
+                <button class="btn-secundario btn-chico" (click)="cancelarEdicion()">
+                  Cancelar
+                </button>
+              </div>
+            } @else {
+              <div class="parametro-valor-zona">
+                <span class="parametro-valor">{{ config.valor }}</span>
+                <button class="btn-editar" (click)="iniciarEdicion(config)" title="Editar valor">
+                  ✏️ Editar
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+  }
+</div>

@@ -1,0 +1,155 @@
+<div class="aulas-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Aulas</h1>
+      <p class="pagina-subtitulo">Administra los ambientes físicos de la institución.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nueva Aula</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por código, edificio o tipo..."
+      />
+    </div>
+    <span class="contador-resultados">{{ aulasFiltradas().length }} aula(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando aulas...</p>
+    </div>
+  } @else if (aulasFiltradas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🏫</div>
+      <p class="vacio-pro-texto">No se encontraron aulas.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Aula</th>
+            <th>Edificio</th>
+            <th>Capacidad</th>
+            <th>Tipo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (aula of aulasFiltradas(); track aula.idAula) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ aula.codigo }}</span>
+              </td>
+              <td>{{ aula.edificio }}</td>
+              <td>{{ aula.capacidad }} personas</td>
+              <td>
+                <span class="badge badge-neutro">{{ etiquetaTipo(aula.tipo) }}</span>
+              </td>
+              <td>
+                <div class="celda-acciones">
+                  <button class="btn btn-borde btn-sm" (click)="abrirFormEditar(aula)">
+                    Editar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal de formulario crear/editar -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">🏫</div>
+          <h2 class="modal-titulo">
+            {{ editandoIdAula() ? 'Editar Aula' : 'Nueva Aula' }}
+          </h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Código</label>
+              <input
+                type="text"
+                class="form-input"
+                [ngModel]="codigoNuevo()"
+                (ngModelChange)="codigoNuevo.set($event)"
+                placeholder="ej. A-301"
+              />
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Edificio</label>
+              <input
+                type="text"
+                class="form-input"
+                [ngModel]="edificioNuevo()"
+                (ngModelChange)="edificioNuevo.set($event)"
+                placeholder="ej. Pabellón A"
+              />
+            </div>
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Capacidad</label>
+              <input
+                type="number"
+                class="form-input"
+                [ngModel]="capacidadNueva()"
+                (ngModelChange)="capacidadNueva.set($event)"
+                min="1"
+                placeholder="ej. 30"
+              />
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Tipo</label>
+              <select class="form-select" [(ngModel)]="tipoNuevo">
+                @for (tipo of tiposAula; track tipo.valor) {
+                  <option [value]="tipo.valor">{{ tipo.etiqueta }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="guardar()" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : (editandoIdAula() ? 'Guardar cambios' : 'Crear aula') }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

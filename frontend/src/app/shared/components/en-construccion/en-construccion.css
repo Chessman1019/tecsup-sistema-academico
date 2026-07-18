@@ -1,0 +1,29 @@
+.construccion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.construccion-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+}
+
+.construccion-titulo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 10px 0;
+}
+
+.construccion-descripcion {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}

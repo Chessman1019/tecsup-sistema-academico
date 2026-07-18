@@ -1,0 +1,69 @@
+<div class="estudiantes-container">
+  <div class="page-header">
+    <h1 class="page-title">Estudiantes</h1>
+    <p class="page-subtitle">Consulta el registro completo de estudiantes del sistema.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre, código o correo..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filtros">
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'todos'" (click)="cambiarFiltro('todos')">Todos</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'activos'" (click)="cambiarFiltro('activos')">Activos</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'inactivos'" (click)="cambiarFiltro('inactivos')">Inactivos</button>
+    </div>
+
+    <span class="resultado-count">{{ estudiantesFiltrados().length }} estudiante(s)</span>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando estudiantes...</div>
+  } @else if (estudiantesFiltrados().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">👥</span>
+      <p>No se encontraron estudiantes.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="estudiantes-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre completo</th>
+            <th>Correo</th>
+            <th>Ciclo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of estudiantesFiltrados(); track e.idEstudiante) {
+            <tr>
+              <td>{{ e.codigoAlumno }}</td>
+              <td>{{ e.nombres }} {{ e.apellidos }}</td>
+              <td>{{ e.correo }}</td>
+              <td>{{ e.cicloActual }}°</td>
+              <td>
+                <span class="estado-badge" [class.badge-activo]="e.estado">
+                  {{ e.estado ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

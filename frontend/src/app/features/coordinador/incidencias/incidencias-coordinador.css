@@ -1,0 +1,135 @@
+.incidencias-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ===== Badge en el título ===== */
+.pagina-titulo .badge {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* ===== Tabs de filtro ===== */
+.filtros-tabs {
+  display: flex;
+  gap: 4px;
+  background: #EEF2F6;
+  border-radius: 999px;
+  padding: 4px;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+
+.filtro-tab {
+  font-family: var(--font-titulos);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.filtro-tab:hover {
+  color: var(--color-text);
+}
+
+.filtro-tab.filtro-activo {
+  background: var(--color-surface);
+  color: var(--color-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== Lista de incidencias (cards tipo ticket) ===== */
+.incidencias-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.incidencia-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.15s ease;
+}
+
+.incidencia-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.incidencia-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.incidencia-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.incidencia-fecha {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.incidencia-titulo {
+  font-family: var(--font-titulos);
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 2px 0 0 0;
+  letter-spacing: -0.01em;
+}
+
+.incidencia-descripcion {
+  font-size: 13.5px;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.incidencia-relacionados {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.incidencia-relacion {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.incidencia-acciones {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px solid #EEF2F6;
+  margin-top: 4px;
+}
+
+.incidencia-resuelta {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-success);
+  margin: 4px 0 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #EEF2F6;
+}

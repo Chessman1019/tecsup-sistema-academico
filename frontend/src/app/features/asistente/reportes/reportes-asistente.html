@@ -1,0 +1,67 @@
+<div class="reportes-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Reportes de Registro</h1>
+      <p class="pagina-subtitulo">Resumen de estudiantes, matrículas y pagos del ciclo.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Generando reporte...</p>
+    </div>
+  } @else {
+
+    <!-- Estudiantes -->
+    <h3 class="grupo-titulo">👥 Estudiantes</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalEstudiantes() }}</p>
+        <p class="metrica-etiqueta">Estudiantes registrados</p>
+        <span class="badge badge-exito">{{ estudiantesActivos() }} activos</span>
+      </div>
+    </div>
+
+    <!-- Matrículas -->
+    <h3 class="grupo-titulo">📋 Matrículas</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalMatriculas() }}</p>
+        <p class="metrica-etiqueta">Matrículas del ciclo</p>
+        <span class="badge badge-info">{{ porcentajeMatriculasActivas() }}% activas</span>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor metrica-verde">{{ matriculasActivas() }}</p>
+        <p class="metrica-etiqueta">Activas</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor metrica-roja">{{ matriculasRetiradas() }}</p>
+        <p class="metrica-etiqueta">Retiradas</p>
+      </div>
+    </div>
+
+    <!-- Pagos -->
+    <h3 class="grupo-titulo">💳 Pagos</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor metrica-verde metrica-monto">{{ totalRecaudado() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+        <p class="metrica-etiqueta">Recaudado</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor metrica-ambar metrica-monto">{{ totalPendienteCobro() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+        <p class="metrica-etiqueta">Por cobrar</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor metrica-roja">{{ pagosVencidos() }}</p>
+        <p class="metrica-etiqueta">Pagos vencidos</p>
+      </div>
+    </div>
+
+  }
+
+</div>

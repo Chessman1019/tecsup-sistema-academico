@@ -1,0 +1,72 @@
+.docentes-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ===== Zona de búsqueda ===== */
+.busqueda-zona {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.busqueda-input-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+  max-width: 420px;
+}
+
+.busqueda-icono {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.busqueda-input {
+  padding-left: 40px;
+  border-radius: 999px;
+}
+
+.contador-resultados {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ===== Celda de docente con avatar (verde = rol docente) ===== */
+.docente-celda {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.docente-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  font-family: var(--font-titulos);
+  font-size: 12.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* ===== Móvil ===== */
+@media (max-width: 640px) {
+  .busqueda-input-wrapper {
+    max-width: none;
+  }
+}

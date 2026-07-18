@@ -1,0 +1,57 @@
+<div class="reportes-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Reportes Académicos</h1>
+      <p class="pagina-subtitulo">Resumen de la gestión académica del ciclo.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Generando reporte académico...</p>
+    </div>
+  } @else {
+
+    <!-- Oferta académica -->
+    <h3 class="grupo-titulo">📚 Oferta académica</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalCursos() }}</p>
+        <p class="metrica-etiqueta">Cursos en catálogo</p>
+        <span class="badge badge-info">{{ porcentajeCursosActivos() }}% activos</span>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalHorarios() }}</p>
+        <p class="metrica-etiqueta">Horarios programados</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalDocentes() }}</p>
+        <p class="metrica-etiqueta">Docentes</p>
+      </div>
+    </div>
+
+    <!-- Alumnado -->
+    <h3 class="grupo-titulo">👥 Alumnado</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalEstudiantes() }}</p>
+        <p class="metrica-etiqueta">Estudiantes registrados</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalMatriculas() }}</p>
+        <p class="metrica-etiqueta">Matrículas del ciclo</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor metrica-verde">{{ matriculasActivas() }}</p>
+        <p class="metrica-etiqueta">Matrículas activas</p>
+      </div>
+    </div>
+
+  }
+
+</div>

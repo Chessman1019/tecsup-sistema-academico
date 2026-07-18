@@ -1,0 +1,80 @@
+<div class="auditoria-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Auditoría</h1>
+      <p class="pagina-subtitulo">Registro de acciones realizadas por los usuarios del sistema.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por usuario, acción o entidad..."
+      />
+    </div>
+    <span class="contador-resultados">{{ registrosFiltrados().length }} registro(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando registros de auditoría...</p>
+    </div>
+  } @else if (registrosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🛡️</div>
+      <p class="vacio-pro-texto">No se encontraron registros de auditoría.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Fecha y hora</th>
+            <th>Usuario</th>
+            <th>Acción</th>
+            <th>Entidad</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of registrosFiltrados(); track r.idAuditoria) {
+            <tr>
+              <td class="celda-fecha">{{ r.fecha | date:'dd MMM yyyy, HH:mm:ss' }}</td>
+              <td>
+                <span class="celda-principal">{{ r.username }}</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="obtenerClaseAccion(r.accion)">
+                  {{ obtenerIconoAccion(r.accion) }} {{ r.accion }}
+                </span>
+              </td>
+              <td>
+                <span class="badge badge-neutro">{{ r.entidad }}</span>
+              </td>
+              <td class="celda-detalle">
+                @if (r.detalle) {
+                  {{ r.detalle }}
+                } @else {
+                  <span class="celda-secundaria">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

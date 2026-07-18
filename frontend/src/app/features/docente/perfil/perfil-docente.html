@@ -1,0 +1,46 @@
+<div class="perfil-container">
+  <div class="page-header">
+    <h1 class="page-title">Mi Perfil</h1>
+    <p class="page-subtitle">Información personal y académica registrada en el sistema.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando perfil...</div>
+  } @else if (perfil(); as datos) {
+    <div class="perfil-card">
+      <div class="perfil-avatar-section">
+        <div class="perfil-avatar">{{ datos.nombres.charAt(0) }}{{ datos.apellidos.charAt(0) }}</div>
+        <div>
+          <h2 class="perfil-nombre">{{ datos.nombres }} {{ datos.apellidos }}</h2>
+          <p class="perfil-codigo">{{ datos.codigoDocente }}</p>
+          @if (datos.categoria) {
+            <span class="perfil-badge">{{ datos.categoria }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="perfil-datos">
+        <div class="dato-item">
+          <span class="dato-label">Correo institucional</span>
+          <span class="dato-valor">{{ datos.correo }}</span>
+        </div>
+        @if (datos.especialidad) {
+          <div class="dato-item">
+            <span class="dato-label">Especialidad</span>
+            <span class="dato-valor">{{ datos.especialidad }}</span>
+          </div>
+        }
+        @if (authService.currentUser(); as usuario) {
+          <div class="dato-item">
+            <span class="dato-label">Usuario del sistema</span>
+            <span class="dato-valor">{{ usuario.username }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

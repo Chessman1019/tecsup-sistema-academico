@@ -1,0 +1,37 @@
+<div class="cursos-container">
+  <div class="page-header">
+    <h1 class="page-title">Mis Cursos</h1>
+    <p class="page-subtitle">Cursos que dictas en el ciclo académico actual.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando cursos...</div>
+  } @else if (cursosAgrupados().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">📚</span>
+      <p>No tienes cursos asignados actualmente.</p>
+    </div>
+  } @else {
+    <div class="cursos-grid">
+      @for (curso of cursosAgrupados(); track curso.idCurso) {
+        <div class="curso-card">
+          <h3 class="curso-nombre">{{ curso.nombreCurso }}</h3>
+
+          <div class="horarios-list">
+            @for (h of curso.horarios; track h.idHorario) {
+              <div class="horario-item">
+                <span class="horario-dia">{{ obtenerNombreDia(h.diaSemana) }}</span>
+                <span class="horario-hora">{{ h.horaInicio }} - {{ h.horaFin }}</span>
+                <span class="horario-aula">Aula {{ h.codigoAula }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

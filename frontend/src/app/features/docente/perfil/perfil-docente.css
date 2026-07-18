@@ -1,0 +1,140 @@
+.perfil-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 6px 0;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid #F5C6CB;
+}
+
+.loading-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 60px 0;
+}
+
+.perfil-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.perfil-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 24px;
+  background: linear-gradient(135deg, #1B8A5A 0%, #14603D 100%);
+}
+
+.perfil-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.perfil-nombre {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.perfil-codigo {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 8px 0;
+}
+
+.perfil-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.perfil-datos {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dato-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dato-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dato-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--color-text-muted);
+}
+
+.dato-valor {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+@media (max-width: 480px) {
+  .perfil-avatar-section {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  .perfil-datos {
+    padding: 20px;
+  }
+}

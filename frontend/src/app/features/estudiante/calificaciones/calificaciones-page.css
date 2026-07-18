@@ -1,0 +1,135 @@
+.calificaciones-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== Grid de cursos ===== */
+.cursos-notas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.curso-notas-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.curso-notas-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.curso-notas-nombre {
+  font-family: var(--font-titulos);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 0 0 3px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.curso-notas-codigo {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ===== Círculo de promedio ===== */
+.promedio-circulo {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 3px solid;
+}
+
+.promedio-valor {
+  font-family: var(--font-titulos);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.promedio-etiqueta {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.promedio-alto {
+  border-color: var(--color-success);
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.promedio-medio {
+  border-color: var(--color-warning);
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.promedio-bajo {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ===== Lista de notas ===== */
+.notas-lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.nota-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #EEF2F6;
+}
+
+.nota-fila:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.nota-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nota-evaluacion {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.nota-fecha {
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+}
+
+.sin-notas {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  padding: 8px 0;
+}

@@ -1,0 +1,84 @@
+<div class="documentos-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Documentos</h1>
+      <p class="pagina-subtitulo">Documentos de los expedientes de los estudiantes.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por estudiante, código o documento..."
+      />
+    </div>
+    <span class="contador-resultados">{{ documentosFiltrados().length }} documento(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando documentos...</p>
+    </div>
+  } @else if (documentosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🗂️</div>
+      <p class="vacio-pro-texto">No se encontraron documentos.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Documento</th>
+            <th>Estudiante</th>
+            <th>Tipo</th>
+            <th>Fecha de subida</th>
+            <th>Archivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of documentosFiltrados(); track d.idDocumento) {
+            <tr>
+              <td>
+                <div class="documento-celda">
+                  <span class="documento-icono-mini">{{ obtenerIcono(d.tipo) }}</span>
+                  <span class="celda-principal">{{ d.nombre }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="celda-principal">{{ d.nombreEstudiante }}</span>
+                <span class="celda-secundaria">{{ d.codigoAlumno }}</span>
+              </td>
+              <td>
+                <span class="badge badge-neutro">{{ d.tipo }}</span>
+              </td>
+              <td>{{ d.fechaSubida | date:'dd MMM yyyy' }}</td>
+              <td>
+                @if (d.urlArchivo) {
+                  <a class="btn btn-borde btn-sm" [href]="d.urlArchivo" target="_blank" rel="noopener">
+                    ⬇ Ver
+                  </a>
+                } @else {
+                  <span class="celda-secundaria">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

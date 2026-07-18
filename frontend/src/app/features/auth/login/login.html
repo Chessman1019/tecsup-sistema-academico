@@ -1,0 +1,125 @@
+<div class="login-page">
+
+  <!-- Panel izquierdo: carrusel de bienvenida -->
+  <div class="carrusel-panel">
+    @for (slide of slides; track slide.imagen; let i = $index) {
+      <div class="carrusel-slide" [class.slide-activo]="slideActual() === i">
+        <img [src]="slide.imagen" [alt]="slide.titulo" class="slide-imagen" />
+        <div class="slide-overlay"></div>
+      </div>
+    }
+
+    <div class="carrusel-contenido">
+      <div class="carrusel-logo">
+        <span class="material-symbols-outlined logo-icono">school</span>
+        <div>
+          <div class="logo-titulo">TECSUP</div>
+          <div class="logo-subtitulo">Sistema de Gestión Académica</div>
+        </div>
+      </div>
+
+      <div class="carrusel-texto">
+        @for (slide of slides; track slide.titulo; let i = $index) {
+          @if (slideActual() === i) {
+            <h1 class="carrusel-titulo">{{ slide.titulo }}</h1>
+            <p class="carrusel-descripcion">{{ slide.descripcion }}</p>
+          }
+        }
+      </div>
+
+      <div class="carrusel-dots">
+        @for (slide of slides; track slide.imagen; let i = $index) {
+          <button
+            class="dot"
+            [class.dot-activo]="slideActual() === i"
+            (click)="irASlide(i)"
+          ></button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel derecho: tarjeta de login flotante -->
+  <div class="login-panel">
+    <div class="login-tarjeta">
+
+      <div class="login-icono-candado">
+        <span class="material-symbols-outlined candado-icono">lock</span>
+      </div>
+
+      <h2 class="login-titulo">Iniciar Sesión</h2>
+      <p class="login-subtitulo">Selecciona tu rol para acceder al portal</p>
+
+      <div class="role-tabs">
+        @for (rol of roles; track rol.clave) {
+          <button
+            type="button"
+            class="role-tab"
+            [class.role-tab-activo]="rolSeleccionado() === rol.clave"
+            (click)="seleccionarRol(rol.clave)"
+          >
+            {{ rol.etiqueta }}
+          </button>
+        }
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="login-form" autocomplete="on">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <div class="input-wrapper">
+            <span class="material-symbols-outlined input-icono">person</span>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              [(ngModel)]="username"
+              placeholder="Usuario o correo institucional"
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <div class="input-wrapper">
+            <span class="material-symbols-outlined input-icono">key</span>
+            <input
+              [type]="mostrarPassword() ? 'text' : 'password'"
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-password" (click)="togglePassword()" aria-label="Mostrar contraseña">
+              <span class="material-symbols-outlined">
+                {{ mostrarPassword() ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        @if (errorMensaje()) {
+          <div class="error-message">
+            <span class="material-symbols-outlined error-icono">error</span>
+            {{ errorMensaje() }}
+          </div>
+        }
+
+        <button type="submit" class="btn-submit" [disabled]="cargando()">
+          @if (cargando()) {
+            Ingresando...
+          } @else {
+            Ingresar
+            <span class="material-symbols-outlined btn-submit-icono">arrow_forward</span>
+          }
+        </button>
+      </form>
+
+      <p class="login-footer">
+        ¿Problemas para ingresar? Contacta a Soporte Técnico.
+      </p>
+    </div>
+  </div>
+
+</div>

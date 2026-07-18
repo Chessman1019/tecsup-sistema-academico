@@ -1,0 +1,88 @@
+<div class="aprobaciones-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">
+        Aprobaciones
+        @if (pendientesAprobacion().length > 0) {
+          <span class="badge badge-advertencia">{{ pendientesAprobacion().length }} pendiente(s)</span>
+        }
+      </h1>
+      <p class="pagina-subtitulo">Incidencias en proceso que requieren tu decisión: aprobar la resolución o devolver a coordinación.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando solicitudes pendientes...</p>
+    </div>
+  } @else if (pendientesAprobacion().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">✅</div>
+      <p class="vacio-pro-texto">No hay incidencias pendientes de aprobación. ¡Todo al día!</p>
+    </div>
+  } @else {
+    <div class="aprobaciones-lista">
+      @for (i of pendientesAprobacion(); track i.idIncidencia) {
+        <div class="aprobacion-card">
+
+          <div class="aprobacion-header">
+            <div class="aprobacion-badges">
+              <span class="badge badge-info">● En proceso</span>
+              <span class="badge" [ngClass]="obtenerClasePrioridad(i.prioridad)">{{ i.prioridad }}</span>
+              <span class="badge badge-neutro">{{ i.tipo }}</span>
+            </div>
+            <span class="aprobacion-fecha">{{ i.fechaCreacion | date:'dd MMM yyyy' }}</span>
+          </div>
+
+          <h3 class="aprobacion-titulo">{{ i.titulo }}</h3>
+          <p class="aprobacion-descripcion">{{ i.descripcion }}</p>
+
+          @if (i.nombreDocente || i.nombreCurso) {
+            <div class="aprobacion-relacionados">
+              @if (i.nombreDocente) {
+                <span class="aprobacion-relacion">🧑‍🏫 {{ i.nombreDocente }}</span>
+              }
+              @if (i.nombreCurso) {
+                <span class="aprobacion-relacion">📚 {{ i.nombreCurso }}</span>
+              }
+            </div>
+          }
+
+          <div class="aprobacion-acciones">
+            <button class="btn btn-borde-peligro btn-sm" (click)="pedirAccion(i, 'devolver')">
+              ↩ Devolver a coordinación
+            </button>
+            <button class="btn btn-exito btn-sm" (click)="pedirAccion(i, 'aprobar')">
+              ✓ Aprobar resolución
+            </button>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Confirmación: aprobar / devolver -->
+  <app-modal-confirmacion
+    [visible]="incidenciaSeleccionada() !== null"
+    [tipo]="accionPendiente() === 'aprobar' ? 'exito' : 'peligro'"
+    [titulo]="accionPendiente() === 'aprobar' ? 'Aprobar resolución' : 'Devolver a coordinación'"
+    [mensaje]="accionPendiente() === 'aprobar'
+      ? '¿Apruebas la resolución de <strong>' + incidenciaSeleccionada()?.titulo + '</strong>? Quedará marcada como Resuelta.'
+      : '¿Deseas devolver <strong>' + incidenciaSeleccionada()?.titulo + '</strong> a coordinación? Volverá al estado Abierta para su reevaluación.'"
+    [textoConfirmar]="accionPendiente() === 'aprobar' ? 'Sí, aprobar' : 'Sí, devolver'"
+    [procesando]="procesando()"
+    (confirmar)="confirmarAccion()"
+    (cancelar)="cancelarAccion()"
+  />
+
+</div>

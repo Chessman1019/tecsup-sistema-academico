@@ -1,0 +1,86 @@
+<div class="pagos-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Mis Pagos</h1>
+      <p class="pagina-subtitulo">Consulta tu estado de cuenta y el historial de pagos.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cantidadVencidos() > 0) {
+    <div class="alerta alerta-advertencia">
+      ⚠️ Tienes {{ cantidadVencidos() }} pago(s) vencido(s). Regulariza tu situación para evitar inconvenientes con tu matrícula.
+    </div>
+  }
+
+  <!-- Resumen -->
+  <div class="resumen-grid">
+    <div class="resumen-card">
+      <span class="resumen-icono resumen-icono-advertencia">💳</span>
+      <div>
+        <p class="resumen-etiqueta">Total por pagar</p>
+        <p class="resumen-monto resumen-monto-advertencia">{{ totalPendiente() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tus pagos...</p>
+    </div>
+  } @else if (pagos().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">💳</div>
+      <p class="vacio-pro-texto">No tienes pagos registrados.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Monto</th>
+            <th>Vencimiento</th>
+            <th>Estado</th>
+            <th>Pago</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pagos(); track p.idPago) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ p.concepto }}</span>
+                <span class="celda-secundaria">Emitido {{ p.fechaEmision | date:'dd MMM yyyy' }}</span>
+              </td>
+              <td>
+                <span class="celda-monto">{{ p.monto | currency:'PEN':'S/ ':'1.2-2' }}</span>
+              </td>
+              <td>{{ p.fechaVencimiento | date:'dd MMM yyyy' }}</td>
+              <td>
+                <span class="badge" [ngClass]="obtenerClaseEstado(p.estado)">
+                  ● {{ p.estado }}
+                </span>
+              </td>
+              <td>
+                @if (p.fechaPago) {
+                  {{ p.fechaPago | date:'dd MMM yyyy' }}
+                  @if (p.metodoPago) {
+                    <span class="celda-secundaria">{{ p.metodoPago }}</span>
+                  }
+                } @else {
+                  <span class="celda-secundaria">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

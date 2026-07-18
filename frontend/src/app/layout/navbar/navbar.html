@@ -1,0 +1,177 @@
+<nav class="navbar">
+
+  <button class="menu-btn" (click)="onMenuClick()" aria-label="Abrir menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Titulo del modulo + Buscador -->
+  <div class="navbar-center">
+    <h1 class="modulo-titulo">{{ tituloModulo() }}</h1>
+
+    <div class="search-wrapper navbar-search">
+      <span class="material-symbols-outlined search-icon">search</span>
+      <input
+        type="search"
+        [ngModel]="busqueda()"
+        (ngModelChange)="busqueda.set($event)"
+        (keyup.enter)="onEnterBusqueda()"
+        placeholder="Buscar módulo..."
+        class="search-input"
+      />
+
+      @if (resultadosBusqueda().length > 0) {
+        <div class="search-resultados">
+          @for (opcion of resultadosBusqueda(); track opcion.ruta) {
+            <button class="search-resultado" (click)="navegarAResultado(opcion)">
+              <span class="material-symbols-outlined search-resultado-icono">{{ opcion.icono }}</span>
+              <span class="search-resultado-etiqueta">{{ opcion.etiqueta }}</span>
+            </button>
+          }
+        </div>
+      } @else if (busqueda().trim().length >= 2) {
+        <div class="search-resultados">
+          <p class="search-sin-resultados">No se encontraron módulos para "{{ busqueda() }}"</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="navbar-actions">
+
+    <!-- Notificaciones -->
+    <div class="navbar-dropdown-wrapper">
+      <button class="icon-btn" (click)="toggleMenu('notificaciones')" aria-label="Notificaciones">
+        <span class="material-symbols-outlined">notifications</span>
+        @if (notificacionesNoLeidas() > 0) {
+          <span class="badge-count">{{ notificacionesNoLeidas() > 9 ? '9+' : notificacionesNoLeidas() }}</span>
+        }
+      </button>
+
+      @if (menuAbierto() === 'notificaciones') {
+        <div class="dropdown dropdown-notificaciones">
+          <div class="dropdown-header">
+            <span class="material-symbols-outlined dropdown-icon">notifications</span>
+            <p class="dropdown-title">Notificaciones</p>
+          </div>
+          <div class="dropdown-body">
+            @if (cargandoNotificaciones()) {
+              <p class="dropdown-empty">Cargando notificaciones...</p>
+            } @else if (notificaciones().length === 0) {
+              <p class="dropdown-empty">No tienes notificaciones nuevas por ahora.</p>
+            } @else {
+              @for (n of notificaciones(); track n.idNotificacion) {
+                <div class="notif-item" [class.notif-leida]="n.leida">
+                  <p class="notif-titulo">{{ n.titulo }}</p>
+                  <p class="notif-mensaje">{{ n.mensaje }}</p>
+                  @if (!n.leida) {
+                    <span class="notif-dot"></span>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Ayuda -->
+    <div class="navbar-dropdown-wrapper">
+      <button class="icon-btn" (click)="toggleMenu('ayuda')" aria-label="Ayuda">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+
+      @if (menuAbierto() === 'ayuda') {
+        <div class="dropdown dropdown-ayuda">
+          <div class="dropdown-header">
+            <span class="material-symbols-outlined dropdown-icon">help</span>
+            <p class="dropdown-title">Ayuda rápida</p>
+          </div>
+          <div class="dropdown-body">
+
+            <!-- Manual del usuario (segun el rol) -->
+            <div class="ayuda-item" (click)="toggleSeccionAyuda('manual')">
+              <p class="ayuda-titulo">
+                <span class="ayuda-titulo-texto"><span class="material-symbols-outlined ayuda-icono">menu_book</span> Manual del usuario</span>
+                <span class="ayuda-flecha">{{ seccionAyuda() === 'manual' ? '▲' : '▼' }}</span>
+              </p>
+              <p class="ayuda-descripcion">Guía de uso según tu rol</p>
+            </div>
+            @if (seccionAyuda() === 'manual') {
+              <div class="ayuda-contenido">
+                @for (paso of manualDelRol(); track paso) {
+                  <p class="ayuda-paso">• {{ paso }}</p>
+                }
+              </div>
+            }
+
+            <!-- Preguntas frecuentes -->
+            <div class="ayuda-item" (click)="toggleSeccionAyuda('faq')">
+              <p class="ayuda-titulo">
+                <span class="ayuda-titulo-texto"><span class="material-symbols-outlined ayuda-icono">forum</span> Preguntas frecuentes</span>
+                <span class="ayuda-flecha">{{ seccionAyuda() === 'faq' ? '▲' : '▼' }}</span>
+              </p>
+              <p class="ayuda-descripcion">Respuestas a dudas comunes</p>
+            </div>
+            @if (seccionAyuda() === 'faq') {
+              <div class="ayuda-contenido">
+                @for (faq of preguntasFrecuentes; track faq.pregunta) {
+                  <div class="faq-item">
+                    <p class="faq-pregunta">{{ faq.pregunta }}</p>
+                    <p class="faq-respuesta">{{ faq.respuesta }}</p>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Contactar soporte -->
+            <div class="ayuda-item" (click)="contactarSoporte()">
+              <p class="ayuda-titulo">
+                <span class="ayuda-titulo-texto"><span class="material-symbols-outlined ayuda-icono">mail</span> Contactar soporte</span>
+              </p>
+              <p class="ayuda-descripcion">soporte&#64;tecsup.edu.pe</p>
+            </div>
+
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Divisor -->
+    <div class="navbar-divider"></div>
+
+    <!-- Usuario -->
+    @if (authService.currentUser(); as usuario) {
+      <div class="navbar-user">
+        <div class="navbar-user-info">
+          <span class="navbar-user-name">{{ usuario.username }}</span>
+          <span class="navbar-user-role">{{ usuario.rol }}</span>
+        </div>
+
+        <label class="navbar-user-avatar avatar-clickeable"
+               [style.background]="perfilService.fotoActual() ? 'transparent' : colorRol()"
+               title="Cambiar foto de perfil">
+          @if (subiendoFoto()) {
+            <span class="avatar-cargando">⏳</span>
+          } @else if (perfilService.fotoActual()) {
+            <img [src]="perfilService.fotoActual()" alt="Foto de perfil" class="avatar-foto" />
+          } @else {
+            {{ inicialUsuario() }}
+          }
+          <input
+            type="file"
+            accept="image/*"
+            class="avatar-input"
+            (change)="onFotoSeleccionada($event)"
+          />
+        </label>
+      </div>
+
+      @if (errorFoto()) {
+        <div class="foto-error">{{ errorFoto() }}</div>
+      }
+    }
+
+  </div>
+</nav>

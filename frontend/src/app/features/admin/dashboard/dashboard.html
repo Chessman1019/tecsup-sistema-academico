@@ -1,0 +1,66 @@
+<div class="dashboard">
+
+  @if (authService.currentUser(); as usuario) {
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Bienvenido, {{ usuario.username }}</h1>
+      <p class="dashboard-subtitle">
+        Panel de <strong>Administración</strong> — Sistema de Gestión Académica TECSUP
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-primary">🧑‍🏫</div>
+        <div class="stat-content">
+          <div class="stat-label">Docentes</div>
+          @if (cargando()) {
+            <div class="stat-value stat-loading">...</div>
+          } @else {
+            <div class="stat-value">{{ totalDocentes() }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-secondary">👥</div>
+        <div class="stat-content">
+          <div class="stat-label">Estudiantes</div>
+          @if (cargando()) {
+            <div class="stat-value stat-loading">...</div>
+          } @else {
+            <div class="stat-value">{{ totalEstudiantes() }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-success">📋</div>
+        <div class="stat-content">
+          <div class="stat-label">Matrículas</div>
+          @if (cargando()) {
+            <div class="stat-value stat-loading">...</div>
+          } @else {
+            <div class="stat-value">{{ totalMatriculas() }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <section class="accesos-section">
+      <h2 class="section-title">Accesos rápidos</h2>
+      <div class="accesos-grid">
+        @for (acceso of accesosRapidos; track acceso.ruta) {
+          <a [routerLink]="acceso.ruta" class="acceso-card">
+            <div class="acceso-icon">{{ acceso.icono }}</div>
+            <div class="acceso-info">
+              <div class="acceso-etiqueta">{{ acceso.etiqueta }}</div>
+              <div class="acceso-descripcion">{{ acceso.descripcion }}</div>
+            </div>
+            <div class="acceso-arrow">→</div>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+</div>

@@ -1,0 +1,68 @@
+<div class="reportes-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Reportes Institucionales</h1>
+      <p class="pagina-subtitulo">Panorama consolidado del sistema académico.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Generando reporte institucional...</p>
+    </div>
+  } @else {
+
+    <!-- Comunidad académica -->
+    <h3 class="grupo-titulo">👥 Comunidad académica</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalEstudiantes() }}</p>
+        <p class="metrica-etiqueta">Estudiantes registrados</p>
+        <span class="badge badge-exito">{{ estudiantesActivos() }} activos</span>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalDocentes() }}</p>
+        <p class="metrica-etiqueta">Docentes</p>
+      </div>
+    </div>
+
+    <!-- Oferta académica -->
+    <h3 class="grupo-titulo">📚 Oferta académica</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalCursos() }}</p>
+        <p class="metrica-etiqueta">Cursos en catálogo</p>
+        <span class="badge badge-info">{{ porcentajeCursosActivos() }}% activos</span>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalHorarios() }}</p>
+        <p class="metrica-etiqueta">Horarios programados</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ totalMatriculas() }}</p>
+        <p class="metrica-etiqueta">Matrículas del ciclo</p>
+        <span class="badge badge-exito">{{ porcentajeMatriculasActivas() }}% activas</span>
+      </div>
+    </div>
+
+    <!-- Finanzas -->
+    <h3 class="grupo-titulo">💰 Finanzas</h3>
+    <div class="metricas-grid">
+      <div class="metrica-card metrica-finanzas">
+        <p class="metrica-valor metrica-verde">{{ totalRecaudado() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+        <p class="metrica-etiqueta">Total recaudado</p>
+      </div>
+      <div class="metrica-card metrica-finanzas">
+        <p class="metrica-valor metrica-ambar">{{ totalPendienteCobro() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+        <p class="metrica-etiqueta">Por cobrar</p>
+      </div>
+    </div>
+
+  }
+
+</div>

@@ -1,0 +1,28 @@
+# --- Secretos y configuracion local (NUNCA commitear) ---
+.env
+.env.*
+src/main/resources/application-local.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-prod.properties
+run-backend.ps1
+
+# --- Build ---
+target/
+*.class
+*.jar
+*.war
+
+# --- IDE ---
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# --- Logs y OS ---
+*.log
+logs/
+.DS_Store
+Thumbs.db
+run-backend.ps1

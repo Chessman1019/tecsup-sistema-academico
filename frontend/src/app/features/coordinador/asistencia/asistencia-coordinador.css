@@ -1,0 +1,126 @@
+.asistencia-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 6px 0;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.alert-error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid #F5C6CB;
+}
+
+.loading-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 60px 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 42px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.resumen-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.resumen-table th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.resumen-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.resumen-table tr:last-child td {
+  border-bottom: none;
+}
+
+.count-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 768px) {
+  .resumen-table thead {
+    display: none;
+  }
+
+  .resumen-table,
+  .resumen-table tbody,
+  .resumen-table tr,
+  .resumen-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .resumen-table tr {
+    margin: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  .resumen-table td {
+    border-bottom: none;
+    padding: 6px 4px;
+  }
+}

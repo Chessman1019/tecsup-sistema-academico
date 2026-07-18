@@ -1,0 +1,57 @@
+<div class="roles-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Roles y Permisos</h1>
+      <p class="pagina-subtitulo">Roles del sistema y sus niveles de acceso a los módulos.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando roles...</p>
+    </div>
+  } @else if (roles().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🔑</div>
+      <p class="vacio-pro-texto">No hay roles registrados en el sistema.</p>
+    </div>
+  } @else {
+    <div class="roles-grid">
+      @for (rol of roles(); track rol.idRol) {
+        <div class="rol-card">
+
+          <div class="rol-header">
+            <div class="rol-icono">{{ iconoRol(rol.nombre) }}</div>
+            <div>
+              <h3 class="rol-nombre">{{ etiquetaRol(rol.nombre) }}</h3>
+              <span class="badge badge-oscuro">{{ rol.nombre }}</span>
+            </div>
+          </div>
+
+          @if (rol.descripcion) {
+            <p class="rol-descripcion">{{ rol.descripcion }}</p>
+          }
+
+          <div class="permisos-lista">
+            @for (permiso of obtenerPermisos(rol.nombre); track permiso.modulo) {
+              <div class="permiso-fila">
+                <span class="permiso-check">✓</span>
+                <div>
+                  <span class="permiso-modulo">{{ permiso.modulo }}</span>
+                  <span class="permiso-acceso">{{ permiso.acceso }}</span>
+                </div>
+              </div>
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

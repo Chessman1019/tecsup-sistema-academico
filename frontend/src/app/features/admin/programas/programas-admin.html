@@ -1,0 +1,172 @@
+<div class="programas-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Programas</h1>
+      <p class="pagina-subtitulo">Administra los programas académicos de la institución.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nuevo Programa</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre, tipo o carrera..."
+      />
+    </div>
+    <span class="contador-resultados">{{ programasFiltrados().length }} programa(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando programas...</p>
+    </div>
+  } @else if (programasFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📘</div>
+      <p class="vacio-pro-texto">No se encontraron programas.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Programa</th>
+            <th>Tipo</th>
+            <th>Carrera asociada</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (programa of programasFiltrados(); track programa.idPrograma) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ programa.nombre }}</span>
+              </td>
+              <td>
+                <span class="badge badge-neutro">{{ etiquetaTipo(programa.tipo) }}</span>
+              </td>
+              <td>
+                @if (programa.nombreCarrera) {
+                  <span class="badge badge-info">{{ programa.nombreCarrera }}</span>
+                } @else {
+                  <span class="celda-secundaria">Sin asignar</span>
+                }
+              </td>
+              <td>
+                @if (programa.estado) {
+                  <span class="badge badge-exito">● Activo</span>
+                } @else {
+                  <span class="badge badge-neutro">● Inactivo</span>
+                }
+              </td>
+              <td>
+                <div class="celda-acciones">
+                  @if (programa.estado) {
+                    <button class="btn btn-fantasma btn-sm" (click)="pedirCambioEstado(programa)">
+                      Desactivar
+                    </button>
+                  } @else {
+                    <button class="btn btn-exito btn-sm" (click)="pedirCambioEstado(programa)">
+                      Activar
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal: nuevo programa -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">📘</div>
+          <h2 class="modal-titulo">Nuevo Programa</h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Nombre del programa</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="nombreNuevo()"
+              (ngModelChange)="nombreNuevo.set($event)"
+              placeholder="ej. Diseño y Desarrollo de Software"
+            />
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Tipo</label>
+              <select class="form-select" [(ngModel)]="tipoNuevo">
+                @for (tipo of tiposPrograma; track tipo.valor) {
+                  <option [value]="tipo.valor">{{ tipo.etiqueta }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">
+                Carrera <span class="form-label-nota">(opcional)</span>
+              </label>
+              <select class="form-select" [(ngModel)]="carreraSeleccionada">
+                <option value="">Sin asignar</option>
+                @for (carrera of carreras(); track carrera.idCarrera) {
+                  <option [value]="carrera.idCarrera">{{ carrera.nombre }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="guardar()" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Crear programa' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Confirmación: cambiar estado -->
+  <app-modal-confirmacion
+    [visible]="programaACambiarEstado() !== null"
+    [tipo]="programaACambiarEstado()?.estado ? 'peligro' : 'exito'"
+    [titulo]="programaACambiarEstado()?.estado ? 'Desactivar programa' : 'Activar programa'"
+    [mensaje]="programaACambiarEstado()?.estado
+      ? '¿Deseas desactivar el programa <strong>' + programaACambiarEstado()?.nombre + '</strong>?'
+      : '¿Deseas activar el programa <strong>' + programaACambiarEstado()?.nombre + '</strong>?'"
+    [textoConfirmar]="programaACambiarEstado()?.estado ? 'Sí, desactivar' : 'Sí, activar'"
+    [procesando]="cambiandoEstado()"
+    (confirmar)="confirmarCambioEstado()"
+    (cancelar)="programaACambiarEstado.set(null)"
+  />
+
+</div>

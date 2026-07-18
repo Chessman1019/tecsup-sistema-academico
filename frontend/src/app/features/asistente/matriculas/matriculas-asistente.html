@@ -1,0 +1,178 @@
+<div class="matriculas-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Matrículas</h1>
+      <p class="pagina-subtitulo">Registra inscripciones y gestiona retiros del ciclo {{ cicloAcademicoActual }}.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNueva()">＋ Nueva Matrícula</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusquedaMatriculas()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por estudiante, código o curso..."
+      />
+    </div>
+    <span class="contador-resultados">{{ matriculasFiltradas().length }} matrícula(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando matrículas...</p>
+    </div>
+  } @else if (matriculasFiltradas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📋</div>
+      <p class="vacio-pro-texto">No se encontraron matrículas registradas.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Curso</th>
+            <th>Ciclo</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of matriculasFiltradas(); track m.idMatricula) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ m.nombreCompletoEstudiante }}</span>
+                <span class="celda-secundaria">{{ m.codigoAlumno }}</span>
+              </td>
+              <td>
+                <span class="celda-principal">{{ m.nombreCurso }}</span>
+                <span class="celda-secundaria">{{ m.codigoCurso }}</span>
+              </td>
+              <td>
+                <span class="badge badge-info">{{ m.cicloAcademico }}</span>
+              </td>
+              <td>{{ m.fechaMatricula | date:'dd MMM yyyy' }}</td>
+              <td>
+                @if (m.estado === 'Activo') {
+                  <span class="badge badge-exito">● Activo</span>
+                } @else if (m.estado === 'Retirado') {
+                  <span class="badge badge-peligro">● Retirado</span>
+                } @else {
+                  <span class="badge badge-neutro">{{ m.estado }}</span>
+                }
+              </td>
+              <td>
+                <div class="celda-acciones">
+                  @if (m.estado === 'Activo') {
+                    <button class="btn btn-borde-peligro btn-sm" (click)="pedirRetiro(m)">
+                      Retirar
+                    </button>
+                  } @else {
+                    <span class="celda-secundaria">—</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal: nueva matrícula -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">📋</div>
+          <h2 class="modal-titulo">Nueva Matrícula — {{ cicloAcademicoActual }}</h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Estudiante</label>
+            <select class="form-select" [(ngModel)]="estudianteSeleccionado">
+              <option value="">Selecciona un estudiante...</option>
+              @for (e of estudiantes(); track e.idEstudiante) {
+                <option [value]="e.idEstudiante">
+                  {{ e.codigoAlumno }} — {{ e.nombres }} {{ e.apellidos }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">Curso</label>
+            <select class="form-select" [(ngModel)]="cursoSeleccionado" (ngModelChange)="onCursoChange()">
+              <option value="">Selecciona un curso...</option>
+              @for (c of cursos(); track c.idCurso) {
+                <option [value]="c.idCurso">
+                  {{ c.codigoCurso }} — {{ c.nombre }} ({{ c.creditos }} créditos)
+                </option>
+              }
+            </select>
+          </div>
+
+          @if (cursoSeleccionado()) {
+            <div class="form-grupo">
+              <label class="form-label">Horario</label>
+              @if (horarios().length === 0) {
+                <p class="form-error">Este curso no tiene horarios disponibles.</p>
+              } @else {
+                <select class="form-select" [(ngModel)]="horarioSeleccionado">
+                  <option value="">Selecciona un horario...</option>
+                  @for (h of horarios(); track h.idHorario) {
+                    <option [value]="h.idHorario">
+                      {{ obtenerNombreDia(h.diaSemana) }} {{ h.horaInicio }}–{{ h.horaFin }} · {{ h.nombreDocente }} · Aula {{ h.codigoAula }}
+                    </option>
+                  }
+                </select>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="matriculando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="onMatricular()" [disabled]="matriculando()">
+            {{ matriculando() ? 'Matriculando...' : 'Registrar matrícula' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Confirmación: retirar matrícula -->
+  <app-modal-confirmacion
+    [visible]="matriculaARetirar() !== null"
+    tipo="peligro"
+    titulo="Retirar matrícula"
+    [mensaje]="'¿Deseas retirar a <strong>' + matriculaARetirar()?.nombreCompletoEstudiante + '</strong> del curso <strong>' + matriculaARetirar()?.nombreCurso + '</strong>? El estudiante perderá su vacante en el horario.'"
+    textoConfirmar="Sí, retirar"
+    [procesando]="retirando()"
+    (confirmar)="confirmarRetiro()"
+    (cancelar)="matriculaARetirar.set(null)"
+  />
+
+</div>

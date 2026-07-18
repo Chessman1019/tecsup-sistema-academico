@@ -1,0 +1,79 @@
+<div class="perfil-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Mi Perfil</h1>
+      <p class="pagina-subtitulo">Tu información personal y académica.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (errorFoto()) {
+    <div class="alerta alerta-error">⚠️ {{ errorFoto() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tu perfil...</p>
+    </div>
+  } @else if (perfil(); as p) {
+
+    <!-- Card hero -->
+    <section class="perfil-hero card-pro">
+      <label class="perfil-avatar" title="Cambiar foto de perfil">
+        @if (subiendoFoto()) {
+          <span class="perfil-avatar-cargando">⏳</span>
+        } @else if (perfilService.fotoActual()) {
+          <img [src]="perfilService.fotoActual()" alt="Foto de perfil" class="perfil-avatar-foto" />
+        } @else {
+          <span class="perfil-avatar-inicial">{{ p.nombres.charAt(0) }}{{ p.apellidos.charAt(0) }}</span>
+        }
+        <span class="perfil-avatar-editar">📷</span>
+        <input type="file" accept="image/*" class="perfil-avatar-input" (change)="onFotoSeleccionada($event)" />
+      </label>
+
+      <div class="perfil-hero-info">
+        <h2 class="perfil-nombre">{{ p.nombres }} {{ p.apellidos }}</h2>
+        <p class="perfil-rol">Estudiante · {{ p.codigoAlumno }}</p>
+        @if (p.estado) {
+          <span class="badge badge-exito">● Habilitado</span>
+        } @else {
+          <span class="badge badge-peligro">● Inhabilitado</span>
+        }
+      </div>
+    </section>
+
+    <!-- Datos -->
+    <section class="card-pro">
+      <h3 class="datos-titulo">Información académica</h3>
+      <div class="datos-grid">
+        <div class="dato-item">
+          <span class="dato-etiqueta">Código de alumno</span>
+          <span class="dato-valor">{{ p.codigoAlumno }}</span>
+        </div>
+        <div class="dato-item">
+          <span class="dato-etiqueta">Correo institucional</span>
+          <span class="dato-valor">{{ p.correo }}</span>
+        </div>
+        <div class="dato-item">
+          <span class="dato-etiqueta">Ciclo actual</span>
+          <span class="dato-valor">Ciclo {{ p.cicloActual }}</span>
+        </div>
+        <div class="dato-item">
+          <span class="dato-etiqueta">Usuario del sistema</span>
+          <span class="dato-valor">{{ authService.currentUser()?.username }}</span>
+        </div>
+      </div>
+      <p class="datos-nota">💡 Haz clic en tu foto para cambiarla (máx. 500 KB). Si algún dato es incorrecto, acércate a Registro Académico.</p>
+    </section>
+
+  }
+
+</div>

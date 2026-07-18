@@ -1,0 +1,42 @@
+<div class="asistencia-container">
+  <div class="page-header">
+    <h1 class="page-title">Supervisión de Asistencia</h1>
+    <p class="page-subtitle">Resumen de estudiantes matriculados por curso y docente.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando información...</div>
+  } @else if (resumenes().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">📅</span>
+      <p>No hay cursos con horarios registrados.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="resumen-table">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th>Docente</th>
+            <th>Estudiantes Matriculados</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of resumenes(); track r.idHorario) {
+            <tr>
+              <td>{{ r.nombreCurso }}</td>
+              <td>{{ r.nombreDocente }}</td>
+              <td>
+                <span class="count-badge">{{ r.totalEstudiantes }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

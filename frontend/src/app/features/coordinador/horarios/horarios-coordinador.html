@@ -1,0 +1,183 @@
+<div class="horarios-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Horarios</h1>
+      <p class="pagina-subtitulo">Asigna docentes, aulas y franjas horarias del ciclo {{ cicloActual() }}.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nuevo Horario</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda y filtro por día -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por curso, docente o aula..."
+      />
+    </div>
+    <span class="contador-resultados">{{ horariosFiltrados().length }} horario(s)</span>
+  </div>
+
+  <div class="filtros-dias">
+    @for (dia of diasSemana; track dia.valor) {
+      <button
+        class="filtro-tab"
+        [class.filtro-activo]="filtroDia() === dia.valor"
+        (click)="cambiarFiltroDia(dia.valor)">
+        {{ dia.etiqueta }}
+      </button>
+    }
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando horarios...</p>
+    </div>
+  } @else if (horariosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🗓️</div>
+      <p class="vacio-pro-texto">No se encontraron horarios con esos criterios.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th>Docente</th>
+            <th>Día</th>
+            <th>Horario</th>
+            <th>Aula</th>
+            <th>Ciclo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (h of horariosFiltrados(); track h.idHorario) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ h.nombreCurso }}</span>
+              </td>
+              <td>{{ h.nombreDocente }}</td>
+              <td>
+                <span class="badge badge-oscuro">{{ obtenerNombreDia(h.diaSemana) }}</span>
+              </td>
+              <td>
+                <span class="horario-franja">{{ h.horaInicio }} – {{ h.horaFin }}</span>
+              </td>
+              <td>
+                <span class="badge badge-neutro">{{ h.codigoAula }}</span>
+              </td>
+              <td>
+                <span class="badge badge-info">{{ h.ciclo }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal: nuevo horario -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card modal-card-ancha" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">🗓️</div>
+          <h2 class="modal-titulo">Nuevo Horario — {{ cicloActual() }}</h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Curso</label>
+            <select class="form-select" [(ngModel)]="cursoSeleccionado">
+              <option value="">Selecciona un curso...</option>
+              @for (c of cursos(); track c.idCurso) {
+                <option [value]="c.idCurso">{{ c.codigoCurso }} — {{ c.nombre }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">Docente</label>
+            <select class="form-select" [(ngModel)]="docenteSeleccionado">
+              <option value="">Selecciona un docente...</option>
+              @for (d of docentes(); track d.idDocente) {
+                <option [value]="d.idDocente">{{ d.nombres }} {{ d.apellidos }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Aula</label>
+              <select class="form-select" [(ngModel)]="aulaSeleccionada">
+                <option value="">Selecciona un aula...</option>
+                @for (a of aulas(); track a.idAula) {
+                  <option [value]="a.idAula">{{ a.codigo }} — {{ a.edificio }} (cap. {{ a.capacidad }})</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Día de la semana</label>
+              <select class="form-select" [(ngModel)]="diaSeleccionado">
+                <option [ngValue]="null">Selecciona un día...</option>
+                @for (dia of diasSemana; track dia.valor) {
+                  <option [ngValue]="dia.valor">{{ dia.etiqueta }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Hora de inicio</label>
+              <input
+                type="time"
+                class="form-input"
+                [ngModel]="horaInicio()"
+                (ngModelChange)="horaInicio.set($event)"
+              />
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Hora de fin</label>
+              <input
+                type="time"
+                class="form-input"
+                [ngModel]="horaFin()"
+                (ngModelChange)="horaFin.set($event)"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="crearHorario()" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Crear horario' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

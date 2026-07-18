@@ -1,0 +1,68 @@
+<div class="estudiantes-container">
+  <div class="page-header">
+    <h1 class="page-title">Mis Estudiantes</h1>
+    <p class="page-subtitle">Estudiantes matriculados en tus cursos del ciclo actual.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre o código..."
+        class="search-input"
+      />
+    </div>
+
+    @if (cursosDisponibles().length > 1) {
+      <select [(ngModel)]="cursoFiltro" class="filtro-select">
+        <option value="">Todos los cursos</option>
+        @for (curso of cursosDisponibles(); track curso) {
+          <option [value]="curso">{{ curso }}</option>
+        }
+      </select>
+    }
+
+    <span class="resultado-count">{{ estudiantesFiltrados().length }} estudiante(s)</span>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando estudiantes...</div>
+  } @else if (estudiantesFiltrados().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">👥</span>
+      <p>No se encontraron estudiantes.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="estudiantes-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Estudiante</th>
+            <th>Curso</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of estudiantesFiltrados(); track e.idMatricula) {
+            <tr>
+              <td>{{ e.codigoAlumno }}</td>
+              <td>{{ e.nombreCompletoEstudiante }}</td>
+              <td>{{ e.nombreCurso }}</td>
+              <td>
+                <span class="estado-badge">{{ e.estado }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,123 @@
+<div class="reportes-container">
+  <div class="page-header">
+    <h1 class="page-title">Reportes Generales del Sistema</h1>
+    <p class="page-subtitle">Panorama completo de la gestión académica institucional.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-state">Generando reporte...</div>
+  } @else {
+    <div class="secciones-grid">
+
+      <!-- Usuarios -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">👤 Usuarios del Sistema</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero">{{ totalUsuarios() }}</span>
+            <span class="stat-etiqueta">Total registrados</span>
+          </div>
+          <div class="reporte-stat">
+            <span class="stat-numero stat-success">{{ usuariosActivos() }}</span>
+            <span class="stat-etiqueta">Activos</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personal academico -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">🧑‍🏫 Personal Académico</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero">{{ totalDocentes() }}</span>
+            <span class="stat-etiqueta">Docentes registrados</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cursos -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">📚 Cursos</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero">{{ totalCursos() }}</span>
+            <span class="stat-etiqueta">Total registrados</span>
+          </div>
+          <div class="reporte-stat">
+            <span class="stat-numero stat-success">{{ cursosActivos() }}</span>
+            <span class="stat-etiqueta">Activos</span>
+          </div>
+        </div>
+        <div class="progreso-bar">
+          <div class="progreso-fill" [style.width.%]="porcentajeCursosActivos()"></div>
+        </div>
+        <p class="progreso-texto">{{ porcentajeCursosActivos() }}% de cursos activos</p>
+      </section>
+
+      <!-- Horarios -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">🗓️ Horarios</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero">{{ totalHorarios() }}</span>
+            <span class="stat-etiqueta">Sesiones programadas</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Estudiantes -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">👥 Estudiantes</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero">{{ totalEstudiantes() }}</span>
+            <span class="stat-etiqueta">Total registrados</span>
+          </div>
+          <div class="reporte-stat">
+            <span class="stat-numero stat-success">{{ estudiantesActivos() }}</span>
+            <span class="stat-etiqueta">Activos</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Matriculas -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">📋 Matrículas</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero">{{ totalMatriculas() }}</span>
+            <span class="stat-etiqueta">Total registradas</span>
+          </div>
+          <div class="reporte-stat">
+            <span class="stat-numero stat-success">{{ matriculasActivas() }}</span>
+            <span class="stat-etiqueta">Activas</span>
+          </div>
+        </div>
+        <div class="progreso-bar">
+          <div class="progreso-fill" [style.width.%]="porcentajeMatriculasActivas()"></div>
+        </div>
+        <p class="progreso-texto">{{ porcentajeMatriculasActivas() }}% de matrículas activas</p>
+      </section>
+
+      <!-- Finanzas -->
+      <section class="reporte-card">
+        <h2 class="reporte-titulo">💳 Finanzas</h2>
+        <div class="reporte-stats">
+          <div class="reporte-stat">
+            <span class="stat-numero stat-success">S/ {{ totalRecaudado().toFixed(2) }}</span>
+            <span class="stat-etiqueta">Recaudado</span>
+          </div>
+          <div class="reporte-stat">
+            <span class="stat-numero stat-danger">S/ {{ totalPendienteCobro().toFixed(2) }}</span>
+            <span class="stat-etiqueta">Por cobrar</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  }
+</div>

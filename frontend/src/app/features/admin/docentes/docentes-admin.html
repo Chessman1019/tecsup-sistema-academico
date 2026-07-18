@@ -1,0 +1,49 @@
+<div class="docentes-container">
+  <div class="page-header">
+    <h1 class="page-title">Staff Docente</h1>
+    <p class="page-subtitle">Consulta el personal docente registrado en el sistema.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre, código o especialidad..."
+        class="search-input"
+      />
+    </div>
+    <span class="resultado-count">{{ docentesFiltrados().length }} docente(s)</span>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando docentes...</div>
+  } @else if (docentesFiltrados().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">🧑‍🏫</span>
+      <p>No se encontraron docentes.</p>
+    </div>
+  } @else {
+    <div class="docentes-grid">
+      @for (d of docentesFiltrados(); track d.idDocente) {
+        <div class="docente-card">
+          <div class="docente-avatar">{{ d.nombres.charAt(0) }}{{ d.apellidos.charAt(0) }}</div>
+          <div class="docente-info">
+            <p class="docente-nombre">{{ d.nombres }} {{ d.apellidos }}</p>
+            <p class="docente-codigo">{{ d.codigoDocente }}</p>
+            <p class="docente-correo">{{ d.correo }}</p>
+            @if (d.especialidad) {
+              <span class="docente-badge">{{ d.especialidad }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

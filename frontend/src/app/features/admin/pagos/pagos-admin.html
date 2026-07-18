@@ -1,0 +1,83 @@
+<div class="pagos-container">
+  <div class="page-header">
+    <h1 class="page-title">Gestión de Pagos</h1>
+    <p class="page-subtitle">Consulta el estado de pagos de todos los estudiantes.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-success">💰</div>
+      <div class="stat-content">
+        <div class="stat-label">Total Recaudado</div>
+        <div class="stat-value">S/ {{ totalRecaudado().toFixed(2) }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-danger">⚠️</div>
+      <div class="stat-content">
+        <div class="stat-label">Total Pendiente</div>
+        <div class="stat-value">S/ {{ totalPendiente().toFixed(2) }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar estudiante o concepto..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filtros">
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'todos'" (click)="cambiarFiltro('todos')">Todos</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'pendiente'" (click)="cambiarFiltro('pendiente')">Pendientes</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'pagado'" (click)="cambiarFiltro('pagado')">Pagados</button>
+      <button class="filtro-btn" [class.filtro-activo]="filtroEstado() === 'vencido'" (click)="cambiarFiltro('vencido')">Vencidos</button>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando pagos...</div>
+  } @else if (pagosFiltrados().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">💳</span>
+      <p>No se encontraron pagos.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="pagos-table">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Concepto</th>
+            <th>Monto</th>
+            <th>Vencimiento</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pagosFiltrados(); track p.idPago) {
+            <tr>
+              <td>{{ p.codigoAlumno }} - {{ p.nombreEstudiante }}</td>
+              <td>{{ p.concepto }}</td>
+              <td class="celda-monto">S/ {{ p.monto.toFixed(2) }}</td>
+              <td>{{ p.fechaVencimiento | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="estado-badge" [class]="obtenerClaseEstado(p.estado)">{{ p.estado }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

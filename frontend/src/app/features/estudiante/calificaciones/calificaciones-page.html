@@ -1,0 +1,62 @@
+<div class="calificaciones-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Mis Calificaciones</h1>
+      <p class="pagina-subtitulo">Consulta tus notas por curso y evaluación.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tus calificaciones...</p>
+    </div>
+  } @else if (cursosConNotas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">⭐</div>
+      <p class="vacio-pro-texto">Aún no tienes cursos con calificaciones registradas.</p>
+    </div>
+  } @else {
+    <div class="cursos-notas-grid">
+      @for (curso of cursosConNotas(); track curso.idMatricula) {
+        <div class="curso-notas-card">
+
+          <div class="curso-notas-header">
+            <div>
+              <h3 class="curso-notas-nombre">{{ curso.nombreCurso }}</h3>
+              <p class="curso-notas-codigo">{{ curso.codigoCurso }}</p>
+            </div>
+            <div class="promedio-circulo" [ngClass]="obtenerColorPromedio(curso.promedio)">
+              <span class="promedio-valor">{{ curso.promedio | number:'1.1-1' }}</span>
+              <span class="promedio-etiqueta">Prom.</span>
+            </div>
+          </div>
+
+          @if (curso.calificaciones.length === 0) {
+            <p class="sin-notas">Sin evaluaciones calificadas todavía.</p>
+          } @else {
+            <div class="notas-lista">
+              @for (nota of curso.calificaciones; track nota.idCalificacion) {
+                <div class="nota-fila">
+                  <div class="nota-info">
+                    <span class="nota-evaluacion">{{ nota.nombreEvaluacion }}</span>
+                    <span class="nota-fecha">{{ nota.fechaRegistro | date:'dd MMM yyyy' }}</span>
+                  </div>
+                  <span class="badge" [ngClass]="obtenerClaseNota(nota.nota)">
+                    {{ nota.nota | number:'1.0-1' }}
+                  </span>
+                </div>
+              }
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

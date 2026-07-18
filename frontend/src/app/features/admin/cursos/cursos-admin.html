@@ -1,0 +1,126 @@
+<div class="cursos-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestión de Cursos</h1>
+      <p class="page-subtitle">Administra el catálogo de cursos del sistema académico.</p>
+    </div>
+    <button class="btn-primary" (click)="abrirFormNuevo()">+ Nuevo Curso</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alert alert-exito">{{ mensajeExito() }}</div>
+  }
+
+  @if (mostrandoForm()) {
+    <section class="card">
+      <h2 class="card-title">{{ editandoIdCurso() ? 'Editar Curso' : 'Nuevo Curso' }}</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="codigo">Código</label>
+          <input
+            type="text"
+            id="codigo"
+            [ngModel]="codigoCurso()"
+            (ngModelChange)="codigoCurso.set($event)"
+            placeholder="Ej. ADS701"
+          />
+        </div>
+        <div class="form-group form-group-large">
+          <label for="nombre">Nombre del curso</label>
+          <input
+            type="text"
+            id="nombre"
+            [ngModel]="nombreCurso()"
+            (ngModelChange)="nombreCurso.set($event)"
+            placeholder="Ej. Análisis y Diseño de Sistemas"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="creditos">Créditos</label>
+          <input
+            type="number"
+            id="creditos"
+            [ngModel]="creditos()"
+            (ngModelChange)="creditos.set($event)"
+            placeholder="4"
+          />
+        </div>
+        <div class="form-group">
+          <label for="horas">Horas semanales</label>
+          <input
+            type="number"
+            id="horas"
+            [ngModel]="horasSemanales()"
+            (ngModelChange)="horasSemanales.set($event)"
+            placeholder="6"
+          />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secundario" (click)="cancelarForm()">Cancelar</button>
+        <button class="btn-primary" (click)="guardar()" [disabled]="guardando()">
+          @if (guardando()) {
+            Guardando...
+          } @else {
+            Guardar
+          }
+        </button>
+      </div>
+    </section>
+  }
+
+  <section class="card">
+    <h2 class="card-title">Catálogo de cursos</h2>
+
+    @if (cargando()) {
+      <p class="loading-state">Cargando cursos...</p>
+    } @else if (cursos().length === 0) {
+      <p class="empty-state">No hay cursos registrados.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table class="cursos-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Créditos</th>
+              <th>Horas/sem</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (curso of cursos(); track curso.idCurso) {
+              <tr>
+                <td>{{ curso.codigoCurso }}</td>
+                <td>{{ curso.nombre }}</td>
+                <td>{{ curso.creditos }}</td>
+                <td>{{ curso.horasSemanales }}</td>
+                <td>
+                  <span class="estado-badge" [class.badge-activo]="curso.estado">
+                    {{ curso.estado ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="acciones-cell">
+                  <button class="btn-link" (click)="abrirFormEditar(curso)">Editar</button>
+                  <button class="btn-link" [class.link-danger]="curso.estado" (click)="toggleEstado(curso)">
+                    {{ curso.estado ? 'Desactivar' : 'Activar' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</div>

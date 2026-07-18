@@ -1,0 +1,115 @@
+<div class="reportes-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Reportes de mis Cursos</h1>
+      <p class="pagina-subtitulo">Rendimiento y asistencia de tus estudiantes por curso.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Selector de curso -->
+  @if (cargandoHorarios()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tus cursos...</p>
+    </div>
+  } @else if (horarios().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📊</div>
+      <p class="vacio-pro-texto">No tienes cursos asignados este ciclo.</p>
+    </div>
+  } @else {
+    <div class="horarios-grid">
+      @for (h of horarios(); track h.idHorario) {
+        <button
+          class="horario-card"
+          [class.horario-card-activo]="horarioSeleccionado()?.idHorario === h.idHorario"
+          (click)="seleccionarCurso(h)">
+          <span class="horario-card-curso">{{ h.nombreCurso }}</span>
+          <span class="horario-card-detalle">Ver reporte del curso</span>
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Resumen del curso -->
+  @if (cargandoResumen()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Generando reporte...</p>
+    </div>
+  } @else if (resumen(); as r) {
+
+    <!-- Métricas generales -->
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <p class="metrica-valor">{{ r.estudiantes.length }}</p>
+        <p class="metrica-etiqueta">Estudiantes</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor" [class.metrica-verde]="r.promedioGeneral >= 12" [class.metrica-roja]="r.promedioGeneral < 12">
+          {{ r.promedioGeneral | number:'1.1-1' }}
+        </p>
+        <p class="metrica-etiqueta">Promedio general</p>
+      </div>
+      <div class="metrica-card">
+        <p class="metrica-valor" [class.metrica-verde]="r.asistenciaPromedio >= 70" [class.metrica-roja]="r.asistenciaPromedio < 70">
+          {{ r.asistenciaPromedio | number:'1.0-0' }}%
+        </p>
+        <p class="metrica-etiqueta">Asistencia promedio</p>
+      </div>
+    </div>
+
+    <!-- Detalle por estudiante -->
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th class="th-centrado">Promedio</th>
+            <th class="th-centrado">Asistencia</th>
+            <th>Situación</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of r.estudiantes; track e.idMatricula) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ e.nombreEstudiante }}</span>
+                <span class="celda-secundaria">{{ e.codigoAlumno }}</span>
+              </td>
+              <td class="td-centrado">
+                <span class="badge" [ngClass]="e.promedio >= 12 ? 'badge-exito' : 'badge-peligro'">
+                  {{ e.promedio | number:'1.1-1' }}
+                </span>
+              </td>
+              <td class="td-centrado">
+                <span class="badge" [ngClass]="e.porcentajeAsistencia >= 70 ? 'badge-exito' : 'badge-peligro'">
+                  {{ e.porcentajeAsistencia | number:'1.0-0' }}%
+                </span>
+              </td>
+              <td>
+                @if (e.enRiesgoAcademico || e.enRiesgoAsistencia) {
+                  <div class="riesgos-zona">
+                    @if (e.enRiesgoAcademico) {
+                      <span class="badge badge-peligro">⚠️ Riesgo académico</span>
+                    }
+                    @if (e.enRiesgoAsistencia) {
+                      <span class="badge badge-advertencia">⚠️ Riesgo asistencia</span>
+                    }
+                  </div>
+                } @else {
+                  <span class="badge badge-exito">✓ Sin riesgo</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+  }
+
+</div>

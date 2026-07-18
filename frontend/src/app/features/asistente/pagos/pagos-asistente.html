@@ -1,0 +1,120 @@
+<div class="pagos-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Pagos</h1>
+      <p class="pagina-subtitulo">Consulta el estado de los pagos de los estudiantes.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Cards de resumen -->
+  <div class="resumen-grid">
+    <div class="resumen-card">
+      <span class="resumen-icono resumen-icono-exito">💰</span>
+      <div>
+        <p class="resumen-etiqueta">Total recaudado</p>
+        <p class="resumen-monto resumen-monto-exito">{{ totalRecaudado() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+      </div>
+    </div>
+    <div class="resumen-card">
+      <span class="resumen-icono resumen-icono-advertencia">⏳</span>
+      <div>
+        <p class="resumen-etiqueta">Por cobrar</p>
+        <p class="resumen-monto resumen-monto-advertencia">{{ totalPendiente() | currency:'PEN':'S/ ':'1.2-2' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Búsqueda y filtros -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por estudiante, código o concepto..."
+      />
+    </div>
+
+    <div class="filtros-tabs">
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'todos'" (click)="cambiarFiltro('todos')">
+        Todos
+      </button>
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'pendiente'" (click)="cambiarFiltro('pendiente')">
+        Pendientes
+      </button>
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'pagado'" (click)="cambiarFiltro('pagado')">
+        Pagados
+      </button>
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'vencido'" (click)="cambiarFiltro('vencido')">
+        Vencidos
+      </button>
+    </div>
+
+    <span class="contador-resultados">{{ pagosFiltrados().length }} pago(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando pagos...</p>
+    </div>
+  } @else if (pagosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">💳</div>
+      <p class="vacio-pro-texto">No se encontraron pagos con esos criterios.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Concepto</th>
+            <th>Monto</th>
+            <th>Vencimiento</th>
+            <th>Estado</th>
+            <th>Pago</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pagosFiltrados(); track p.idPago) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ p.nombreEstudiante }}</span>
+                <span class="celda-secundaria">{{ p.codigoAlumno }}</span>
+              </td>
+              <td>{{ p.concepto }}</td>
+              <td>
+                <span class="celda-monto">{{ p.monto | currency:'PEN':'S/ ':'1.2-2' }}</span>
+              </td>
+              <td>{{ p.fechaVencimiento | date:'dd MMM yyyy' }}</td>
+              <td>
+                <span class="badge" [ngClass]="obtenerClaseEstado(p.estado)">
+                  ● {{ p.estado }}
+                </span>
+              </td>
+              <td>
+                @if (p.fechaPago) {
+                  {{ p.fechaPago | date:'dd MMM yyyy' }}
+                  @if (p.metodoPago) {
+                    <span class="celda-secundaria">{{ p.metodoPago }}</span>
+                  }
+                } @else {
+                  <span class="celda-secundaria">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

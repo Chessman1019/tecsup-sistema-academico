@@ -1,0 +1,104 @@
+<div class="estudiantes-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Estudiantes</h1>
+      <p class="pagina-subtitulo">Consulta y gestiona los estudiantes registrados.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Búsqueda y filtros -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre, código o correo..."
+      />
+    </div>
+
+    <div class="filtros-tabs">
+      <button
+        class="filtro-tab"
+        [class.filtro-activo]="filtroEstado() === 'todos'"
+        (click)="cambiarFiltro('todos')">
+        Todos
+      </button>
+      <button
+        class="filtro-tab"
+        [class.filtro-activo]="filtroEstado() === 'activos'"
+        (click)="cambiarFiltro('activos')">
+        Activos
+      </button>
+      <button
+        class="filtro-tab"
+        [class.filtro-activo]="filtroEstado() === 'inactivos'"
+        (click)="cambiarFiltro('inactivos')">
+        Inactivos
+      </button>
+    </div>
+
+    <span class="contador-resultados">{{ estudiantesFiltrados().length }} estudiante(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando estudiantes...</p>
+    </div>
+  } @else if (estudiantesFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🎓</div>
+      <p class="vacio-pro-texto">No se encontraron estudiantes con esos criterios.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Código</th>
+            <th>Ciclo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of estudiantesFiltrados(); track e.idEstudiante) {
+            <tr>
+              <td>
+                <div class="estudiante-celda">
+                  <div class="estudiante-avatar">
+                    {{ e.nombres.charAt(0) }}{{ e.apellidos.charAt(0) }}
+                  </div>
+                  <div>
+                    <span class="celda-principal">{{ e.nombres }} {{ e.apellidos }}</span>
+                    <span class="celda-secundaria">{{ e.correo }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge badge-info">{{ e.codigoAlumno }}</span>
+              </td>
+              <td>Ciclo {{ e.cicloActual }}</td>
+              <td>
+                @if (e.estado) {
+                  <span class="badge badge-exito">● Activo</span>
+                } @else {
+                  <span class="badge badge-neutro">● Inactivo</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

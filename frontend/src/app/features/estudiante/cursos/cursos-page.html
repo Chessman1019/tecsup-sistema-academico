@@ -1,0 +1,57 @@
+<div class="cursos-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Catálogo de Cursos</h1>
+      <p class="pagina-subtitulo">Explora los cursos disponibles para matrícula este ciclo.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre o código..."
+      />
+    </div>
+    <span class="contador-resultados">{{ cursosFiltrados().length }} curso(s) disponible(s)</span>
+  </div>
+
+  <!-- Catálogo en cards -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando el catálogo de cursos...</p>
+    </div>
+  } @else if (cursosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📚</div>
+      <p class="vacio-pro-texto">No se encontraron cursos con ese criterio.</p>
+    </div>
+  } @else {
+    <div class="catalogo-grid">
+      @for (curso of cursosFiltrados(); track curso.idCurso) {
+        <div class="curso-card">
+          <div class="curso-card-icono">📚</div>
+          <div class="curso-card-cuerpo">
+            <span class="badge badge-info curso-card-codigo">{{ curso.codigoCurso }}</span>
+            <h3 class="curso-card-nombre">{{ curso.nombre }}</h3>
+            <div class="curso-card-meta">
+              <span class="curso-meta-item">⭐ {{ curso.creditos }} créditos</span>
+              <span class="curso-meta-item">🕐 {{ curso.horasSemanales }} h/semana</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

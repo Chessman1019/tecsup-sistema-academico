@@ -1,0 +1,178 @@
+<div class="sedes-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Sedes</h1>
+      <p class="pagina-subtitulo">Administra las sedes de la institución.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nueva Sede</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre o ciudad..."
+      />
+    </div>
+    <span class="contador-resultados">{{ sedesFiltradas().length }} sede(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando sedes...</p>
+    </div>
+  } @else if (sedesFiltradas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🏢</div>
+      <p class="vacio-pro-texto">No se encontraron sedes.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Sede</th>
+            <th>Ciudad</th>
+            <th>Dirección</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (sede of sedesFiltradas(); track sede.idSede) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ sede.nombre }}</span>
+              </td>
+              <td>
+                <span class="badge badge-info">{{ sede.ciudad }}</span>
+              </td>
+              <td>
+                @if (sede.direccion) {
+                  {{ sede.direccion }}
+                } @else {
+                  <span class="celda-secundaria">—</span>
+                }
+              </td>
+              <td>
+                @if (sede.estado) {
+                  <span class="badge badge-exito">● Activa</span>
+                } @else {
+                  <span class="badge badge-neutro">● Inactiva</span>
+                }
+              </td>
+              <td>
+                <div class="celda-acciones">
+                  <button class="btn btn-borde btn-sm" (click)="abrirFormEditar(sede)">
+                    Editar
+                  </button>
+                  @if (sede.estado) {
+                    <button class="btn btn-fantasma btn-sm" (click)="pedirCambioEstado(sede)">
+                      Desactivar
+                    </button>
+                  } @else {
+                    <button class="btn btn-exito btn-sm" (click)="pedirCambioEstado(sede)">
+                      Activar
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal de formulario crear/editar -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">🏢</div>
+          <h2 class="modal-titulo">
+            {{ editandoIdSede() ? 'Editar Sede' : 'Nueva Sede' }}
+          </h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Nombre de la sede</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="nombreNuevo()"
+              (ngModelChange)="nombreNuevo.set($event)"
+              placeholder="ej. Sede Lima Centro"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">Ciudad</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="ciudadNueva()"
+              (ngModelChange)="ciudadNueva.set($event)"
+              placeholder="ej. Lima"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">
+              Dirección <span class="form-label-nota">(opcional)</span>
+            </label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="direccionNueva()"
+              (ngModelChange)="direccionNueva.set($event)"
+              placeholder="ej. Av. Cascanueces 2221"
+            />
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="guardar()" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : (editandoIdSede() ? 'Guardar cambios' : 'Crear sede') }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Confirmación: cambiar estado -->
+  <app-modal-confirmacion
+    [visible]="sedeACambiarEstado() !== null"
+    [tipo]="sedeACambiarEstado()?.estado ? 'peligro' : 'exito'"
+    [titulo]="sedeACambiarEstado()?.estado ? 'Desactivar sede' : 'Activar sede'"
+    [mensaje]="sedeACambiarEstado()?.estado
+      ? '¿Deseas desactivar la sede <strong>' + sedeACambiarEstado()?.nombre + '</strong>?'
+      : '¿Deseas activar la sede <strong>' + sedeACambiarEstado()?.nombre + '</strong>?'"
+    [textoConfirmar]="sedeACambiarEstado()?.estado ? 'Sí, desactivar' : 'Sí, activar'"
+    [procesando]="cambiandoEstado()"
+    (confirmar)="confirmarCambioEstado()"
+    (cancelar)="sedeACambiarEstado.set(null)"
+  />
+
+</div>

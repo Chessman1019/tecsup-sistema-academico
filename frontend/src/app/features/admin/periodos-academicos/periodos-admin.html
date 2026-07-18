@@ -1,0 +1,133 @@
+<div class="periodos-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Períodos Académicos</h1>
+      <p class="pagina-subtitulo">Administra los ciclos académicos de la institución.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nuevo Período</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por código o estado..."
+      />
+    </div>
+    <span class="contador-resultados">{{ periodosFiltrados().length }} período(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando períodos académicos...</p>
+    </div>
+  } @else if (periodosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📆</div>
+      <p class="vacio-pro-texto">No se encontraron períodos académicos.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Período</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (periodo of periodosFiltrados(); track periodo.idPeriodo) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ periodo.codigo }}</span>
+              </td>
+              <td>{{ periodo.fechaInicio | date:'dd MMM yyyy' }}</td>
+              <td>{{ periodo.fechaFin | date:'dd MMM yyyy' }}</td>
+              <td>
+                <span class="badge" [ngClass]="obtenerClaseBadge(periodo.estado)">
+                  ● {{ periodo.estado }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal: nuevo período -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">📆</div>
+          <h2 class="modal-titulo">Nuevo Período Académico</h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Código del período</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="codigoNuevo()"
+              (ngModelChange)="codigoNuevo.set($event)"
+              placeholder="ej. 2026-II"
+            />
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Fecha de inicio</label>
+              <input
+                type="date"
+                class="form-input"
+                [ngModel]="fechaInicioNueva()"
+                (ngModelChange)="fechaInicioNueva.set($event)"
+              />
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">Fecha de fin</label>
+              <input
+                type="date"
+                class="form-input"
+                [ngModel]="fechaFinNueva()"
+                (ngModelChange)="fechaFinNueva.set($event)"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="guardar()" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Crear período' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

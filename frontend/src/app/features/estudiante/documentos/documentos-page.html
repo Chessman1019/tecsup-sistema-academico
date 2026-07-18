@@ -1,0 +1,45 @@
+<div class="documentos-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Mis Documentos</h1>
+      <p class="pagina-subtitulo">Documentos asociados a tu expediente académico.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tus documentos...</p>
+    </div>
+  } @else if (documentos().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🗂️</div>
+      <p class="vacio-pro-texto">Aún no tienes documentos registrados en tu expediente.</p>
+    </div>
+  } @else {
+    <div class="documentos-grid">
+      @for (doc of documentos(); track doc.idDocumento) {
+        <div class="documento-card">
+          <div class="documento-icono">{{ obtenerIconoPorTipo(doc.tipo) }}</div>
+          <div class="documento-info">
+            <p class="documento-nombre">{{ doc.nombre }}</p>
+            <p class="documento-meta">
+              <span class="badge badge-neutro">{{ doc.tipo }}</span>
+            </p>
+            <p class="documento-fecha">Subido el {{ doc.fechaSubida | date:'dd MMM yyyy' }}</p>
+          </div>
+          @if (doc.urlArchivo) {
+            <a class="btn btn-borde btn-sm documento-descarga" [href]="doc.urlArchivo" target="_blank" rel="noopener">
+              ⬇ Ver
+            </a>
+          }
+        </div>
+      }
+    </div>
+  }
+
+</div>

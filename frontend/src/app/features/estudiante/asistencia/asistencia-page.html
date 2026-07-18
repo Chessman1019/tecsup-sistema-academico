@@ -1,0 +1,79 @@
+<div class="asistencia-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Mi Asistencia</h1>
+      <p class="pagina-subtitulo">Consulta tu historial de asistencia por curso.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tu asistencia...</p>
+    </div>
+  } @else if (cursosConAsistencia().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📅</div>
+      <p class="vacio-pro-texto">Aún no tienes registros de asistencia.</p>
+    </div>
+  } @else {
+    <div class="asistencia-grid">
+      @for (curso of cursosConAsistencia(); track curso.idMatricula) {
+        <div class="asistencia-card">
+
+          <div class="asistencia-header">
+            <div>
+              <h3 class="asistencia-curso">{{ curso.nombreCurso }}</h3>
+              <p class="asistencia-codigo">{{ curso.codigoCurso }}</p>
+            </div>
+            @if (curso.porcentaje.enRiesgo) {
+              <span class="badge badge-peligro">⚠️ En riesgo</span>
+            }
+          </div>
+
+          <!-- Barra de porcentaje -->
+          <div class="porcentaje-zona">
+            <div class="porcentaje-barra-fondo">
+              <div
+                class="porcentaje-barra"
+                [ngClass]="obtenerClaseBarra(curso.porcentaje.enRiesgo)"
+                [style.width.%]="curso.porcentaje.porcentajeAsistencia">
+              </div>
+            </div>
+            <span class="porcentaje-valor">{{ curso.porcentaje.porcentajeAsistencia | number:'1.0-0' }}%</span>
+          </div>
+
+          <!-- Contadores -->
+          <div class="contadores-zona">
+            <span class="stat stat-presente">{{ curso.porcentaje.presentes }} Presentes</span>
+            <span class="stat stat-tardanza">{{ curso.porcentaje.tardanzas }} Tardanzas</span>
+            <span class="stat stat-ausente">{{ curso.porcentaje.ausencias }} Ausencias</span>
+            <span class="stat stat-pendiente">{{ curso.porcentaje.totalSesiones }} Sesiones</span>
+          </div>
+
+          <!-- Historial -->
+          @if (curso.registros.length === 0) {
+            <p class="sin-registros">Sin sesiones registradas todavía.</p>
+          } @else {
+            <div class="historial-lista">
+              @for (r of curso.registros; track r.idRegistro) {
+                <div class="historial-fila">
+                  <span class="historial-fecha">{{ r.fecha | date:'dd MMM yyyy' }}</span>
+                  <span class="badge" [ngClass]="obtenerClaseEstado(r.estado)">
+                    {{ obtenerEtiquetaEstado(r.estado) }}
+                  </span>
+                </div>
+              }
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

@@ -1,0 +1,190 @@
+.sidebar {
+  width: 288px;
+  min-height: 100vh;
+  background: #F8FAFD;
+  border-right: 1px solid #DDE6EE;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+/* ===================== Logo ===================== */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 26px 22px 26px;
+  border-bottom: 1px solid #E5EDF4;
+}
+
+.logo-icono {
+  font-size: 32px;
+  color: #0092D6;
+}
+
+.logo-titulo {
+  font-family: var(--font-titulos);
+  font-size: 20px;
+  font-weight: 800;
+  color: #0092D6;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.logo-subtitulo {
+  font-size: 12px;
+  color: #94A3B8;
+  margin: 0;
+}
+
+/* ===================== User info ===================== */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: 1px solid #E5EDF4;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.user-datos {
+  min-width: 0;
+}
+
+.user-nombre {
+  font-family: var(--font-titulos);
+  font-size: 14px;
+  font-weight: 800;
+  color: #14181F;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 160px;
+}
+
+.user-badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+/* ===================== Menu (estilo MedCare) ===================== */
+.sidebar-nav {
+  flex: 1;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-radius: 14px;
+  font-family: var(--font-titulos);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #14181F;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: all 0.15s ease;
+}
+
+/* Iconos Material Symbols: gris oscuro elegante */
+.sidebar-icon {
+  font-size: 22px;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+  color: #3D4A5C;
+  transition: color 0.15s ease;
+}
+
+.sidebar-link:hover {
+  background: #EAF1F7;
+}
+
+.sidebar-link:hover .sidebar-icon {
+  color: #0092D6;
+}
+
+/* Item activo: botón SÓLIDO celeste TECSUP (como el MedCare verde) */
+.sidebar-link.activo {
+  background: var(--color-primary, #0092D6);
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0, 146, 214, 0.32);
+}
+
+.sidebar-link.activo .sidebar-icon {
+  color: #ffffff;
+}
+
+/* ===================== Logout ===================== */
+.sidebar-footer {
+  padding: 16px 14px;
+  border-top: 1px solid #E5EDF4;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-radius: 14px;
+  background: transparent;
+  border: none;
+  font-family: var(--font-titulos);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #E53E3E;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background: #FDECEC;
+}
+
+.logout-btn .sidebar-icon {
+  color: #E53E3E;
+}
+
+/* ===================== Movil ===================== */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 45;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar-abierto {
+    transform: translateX(0);
+  }
+}

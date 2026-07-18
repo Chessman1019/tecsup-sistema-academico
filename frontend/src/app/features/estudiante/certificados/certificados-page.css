@@ -1,0 +1,59 @@
+.certificados-container {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+/* ===== Card de solicitud ===== */
+.solicitud-card {
+  margin-bottom: 28px;
+}
+
+.solicitud-titulo {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 0 0 14px 0;
+}
+
+.solicitud-fila {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.solicitud-select {
+  flex: 1;
+  min-width: 260px;
+  max-width: 420px;
+  margin-bottom: 0;
+}
+
+/* ===== Título de sección ===== */
+.seccion-titulo-fuera {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 0 0 14px 0;
+}
+
+/* ===== Enlace como botón ===== */
+a.btn {
+  text-decoration: none;
+}
+
+/* ===== Móvil ===== */
+@media (max-width: 640px) {
+  .solicitud-fila {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .solicitud-select {
+    max-width: none;
+  }
+
+  .solicitud-fila .btn {
+    width: 100%;
+  }
+}

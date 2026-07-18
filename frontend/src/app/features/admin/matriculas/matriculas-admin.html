@@ -1,0 +1,119 @@
+<div class="matriculas-container">
+  <div class="page-header">
+    <h1 class="page-title">Gestión de Matrículas</h1>
+    <p class="page-subtitle">Matricula estudiantes y administra las inscripciones del ciclo.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alert alert-exito">{{ mensajeExito() }}</div>
+  }
+
+  <section class="card">
+    <h2 class="card-title">Nueva matrícula — Ciclo {{ cicloAcademicoActual }}</h2>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="estudiante">Estudiante</label>
+        <select id="estudiante" [(ngModel)]="estudianteSeleccionado">
+          <option value="">Selecciona un estudiante</option>
+          @for (est of estudiantes(); track est.idEstudiante) {
+            <option [value]="est.idEstudiante">{{ est.codigoAlumno }} - {{ est.nombres }} {{ est.apellidos }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="curso">Curso</label>
+        <select id="curso" [(ngModel)]="cursoSeleccionado" (ngModelChange)="onCursoChange()">
+          <option value="">Selecciona un curso</option>
+          @for (curso of cursos(); track curso.idCurso) {
+            <option [value]="curso.idCurso">{{ curso.codigoCurso }} - {{ curso.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="horario">Horario</label>
+        <select id="horario" [(ngModel)]="horarioSeleccionado" [disabled]="!cursoSeleccionado()">
+          <option value="">Selecciona un horario</option>
+          @for (horario of horarios(); track horario.idHorario) {
+            <option [value]="horario.idHorario">
+              {{ horario.nombreDocente }} — Día {{ horario.diaSemana }}, {{ horario.horaInicio }}-{{ horario.horaFin }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <button
+      class="btn-primary"
+      (click)="onMatricular()"
+      [disabled]="matriculando() || !estudianteSeleccionado() || !cursoSeleccionado() || !horarioSeleccionado()"
+    >
+      @if (matriculando()) {
+        Procesando...
+      } @else {
+        Matricular
+      }
+    </button>
+  </section>
+
+  <section class="card">
+    <div class="card-header-row">
+      <h2 class="card-title">Matrículas registradas</h2>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="search"
+          [ngModel]="textoBusquedaMatriculas()"
+          (ngModelChange)="onBusquedaChange($event)"
+          placeholder="Buscar estudiante o curso..."
+          class="search-input"
+        />
+      </div>
+    </div>
+
+    @if (cargando()) {
+      <p class="loading-state">Cargando matrículas...</p>
+    } @else if (matriculasFiltradas().length === 0) {
+      <p class="empty-state">No se encontraron matrículas.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table class="matriculas-table">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Curso</th>
+              <th>Ciclo</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of matriculasFiltradas(); track m.idMatricula) {
+              <tr>
+                <td>{{ m.codigoAlumno }} - {{ m.nombreCompletoEstudiante }}</td>
+                <td>{{ m.codigoCurso }} - {{ m.nombreCurso }}</td>
+                <td>{{ m.cicloAcademico }}</td>
+                <td>
+                  <span class="badge" [class.badge-activo]="m.estado === 'Activo'" [class.badge-retirado]="m.estado === 'Retirado'">
+                    {{ m.estado }}
+                  </span>
+                </td>
+                <td>
+                  @if (m.estado === 'Activo') {
+                    <button class="btn-secundario" (click)="onRetirar(m.idMatricula)">Retirar</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</div>

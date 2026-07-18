@@ -1,0 +1,46 @@
+<div class="calificaciones-container">
+  <div class="page-header">
+    <h1 class="page-title">Supervisión de Calificaciones</h1>
+    <p class="page-subtitle">Consulta las evaluaciones registradas en todos los cursos.</p>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alert alert-error">{{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando evaluaciones...</div>
+  } @else if (evaluaciones().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">⭐</span>
+      <p>No hay evaluaciones registradas en el sistema.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="evaluaciones-table">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th>Evaluación</th>
+            <th>Tipo</th>
+            <th>Peso</th>
+            <th>Fecha programada</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ev of evaluaciones(); track ev.idEvaluacion) {
+            <tr>
+              <td>{{ ev.nombreCurso }}</td>
+              <td>{{ ev.nombre }}</td>
+              <td>{{ ev.tipo }}</td>
+              <td>
+                <span class="peso-badge">{{ ev.peso }}%</span>
+              </td>
+              <td>{{ ev.fechaProgramada ? (ev.fechaProgramada | date:'dd/MM/yyyy') : '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,131 @@
+<div class="certificados-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Certificados</h1>
+      <p class="pagina-subtitulo">
+        Gestiona las solicitudes de certificados y constancias.
+        @if (totalPendientes() > 0) {
+          <span class="badge badge-advertencia">{{ totalPendientes() }} pendiente(s)</span>
+        }
+      </p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda y filtros -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por estudiante o tipo..."
+      />
+    </div>
+
+    <div class="filtros-tabs">
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'todos'" (click)="cambiarFiltro('todos')">
+        Todos
+      </button>
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'Pendiente'" (click)="cambiarFiltro('Pendiente')">
+        Pendientes
+      </button>
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'Emitido'" (click)="cambiarFiltro('Emitido')">
+        Emitidos
+      </button>
+      <button class="filtro-tab" [class.filtro-activo]="filtroEstado() === 'Rechazado'" (click)="cambiarFiltro('Rechazado')">
+        Rechazados
+      </button>
+    </div>
+
+    <span class="contador-resultados">{{ certificadosFiltrados().length }} solicitud(es)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando certificados...</p>
+    </div>
+  } @else if (certificadosFiltrados().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">📄</div>
+      <p class="vacio-pro-texto">No se encontraron solicitudes de certificados.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Tipo</th>
+            <th>Solicitado</th>
+            <th>Emitido</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of certificadosFiltrados(); track c.idCertificado) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ c.nombreEstudiante }}</span>
+              </td>
+              <td>{{ c.tipo }}</td>
+              <td>{{ c.fechaSolicitud | date:'dd MMM yyyy' }}</td>
+              <td>
+                @if (c.fechaEmision) {
+                  {{ c.fechaEmision | date:'dd MMM yyyy' }}
+                } @else {
+                  <span class="celda-secundaria">—</span>
+                }
+              </td>
+              <td>
+                <span class="badge" [ngClass]="obtenerClaseEstado(c.estado)">
+                  ● {{ c.estado }}
+                </span>
+              </td>
+              <td>
+                <div class="celda-acciones">
+                  @if (c.estado === 'Pendiente') {
+                    <button class="btn btn-primario btn-sm" (click)="pedirEmision(c)">
+                      Emitir
+                    </button>
+                  } @else if (c.urlDoc) {
+                    <a class="btn btn-borde btn-sm" [href]="c.urlDoc" target="_blank" rel="noopener">
+                      Ver documento
+                    </a>
+                  } @else {
+                    <span class="celda-secundaria">—</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Confirmación: emitir certificado -->
+  <app-modal-confirmacion
+    [visible]="certificadoAEmitir() !== null"
+    tipo="info"
+    titulo="Emitir certificado"
+    [mensaje]="'¿Deseas emitir el certificado de tipo <strong>' + certificadoAEmitir()?.tipo + '</strong> solicitado por <strong>' + certificadoAEmitir()?.nombreEstudiante + '</strong>? Se generará el documento oficial y el estudiante podrá descargarlo.'"
+    textoConfirmar="Sí, emitir"
+    [procesando]="emitiendo()"
+    (confirmar)="confirmarEmision()"
+    (cancelar)="certificadoAEmitir.set(null)"
+  />
+
+</div>

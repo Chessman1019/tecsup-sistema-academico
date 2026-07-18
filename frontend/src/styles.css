@@ -1,0 +1,579 @@
+/* ============================================================
+   SISTEMA DE DISEÑO — TECSUP Sistema Académico
+   ============================================================ */
+
+:root {
+  /* ===== Colores de marca TECSUP ===== */
+  --color-primary: #0092D6;
+  --color-primary-dark: #006CA5;
+  --color-primary-light: #E6F5FC;
+  --color-secondary: #0A1628;
+  --color-black: #14181F;
+
+  /* ===== Grises / neutros ===== */
+  --color-bg: #F5F7FA;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text: #1A202C;
+  --color-text-muted: #64748B;
+
+  /* ===== Estados ===== */
+  --color-success: #1B8A5A;
+  --color-success-bg: #E6F7EF;
+  --color-danger: #D64545;
+  --color-danger-bg: #FDECEC;
+  --color-warning: #B78103;
+  --color-warning-bg: #FEF6E6;
+  --color-info: #0092D6;
+  --color-info-bg: #E6F5FC;
+
+  /* ===== Tipografia ===== */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-titulos: 'Plus Jakarta Sans', 'Inter', sans-serif;
+
+  /* ===== Bordes y sombras ===== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(10, 22, 40, 0.06);
+  --shadow-md: 0 4px 16px rgba(10, 22, 40, 0.08);
+  --shadow-lg: 0 16px 40px rgba(10, 22, 40, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-titulos);
+  color: var(--color-secondary);
+  letter-spacing: -0.02em;
+}
+
+button, input, select, textarea {
+  font-family: var(--font-family);
+}
+
+/* Scrollbar mas discreto */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ============================================================
+   ENCABEZADO DE PÁGINA
+   ============================================================ */
+
+.pagina-titulo {
+  font-family: var(--font-titulos);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  letter-spacing: -0.02em;
+  margin: 0 0 6px 0;
+}
+
+.pagina-subtitulo {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ============================================================
+   TABLAS PROFESIONALES
+   ============================================================ */
+
+.tabla-container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.tabla-pro {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.tabla-pro thead th {
+  font-family: var(--font-titulos);
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  background: #FAFBFC;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.tabla-pro tbody td {
+  padding: 15px 18px;
+  border-bottom: 1px solid #EEF2F6;
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.tabla-pro tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-pro tbody tr {
+  transition: background 0.12s ease;
+}
+
+.tabla-pro tbody tr:hover {
+  background: #F8FBFD;
+}
+
+.tabla-pro .celda-principal {
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.tabla-pro .celda-secundaria {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.tabla-pro .celda-acciones {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   BADGES DE ESTADO (píldoras)
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.badge-exito {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge-peligro {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.badge-advertencia {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.badge-info {
+  background: var(--color-info-bg);
+  color: var(--color-primary-dark);
+}
+
+.badge-neutro {
+  background: #EEF2F6;
+  color: var(--color-text-muted);
+}
+
+.badge-oscuro {
+  background: var(--color-secondary);
+  color: #ffffff;
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.btn {
+  font-family: var(--font-titulos);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Botón principal celeste TECSUP */
+.btn-primario {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-primario:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  box-shadow: 0 4px 12px rgba(0, 146, 214, 0.35);
+}
+
+/* Botón oscuro (tipo "Nuevo Usuario" / "Nueva cita") */
+.btn-oscuro {
+  background: var(--color-secondary);
+  color: #ffffff;
+}
+
+.btn-oscuro:hover:not(:disabled) {
+  background: #12233D;
+  box-shadow: 0 4px 12px rgba(10, 22, 40, 0.3);
+}
+
+.btn-exito {
+  background: var(--color-success);
+  color: #ffffff;
+}
+
+.btn-exito:hover:not(:disabled) {
+  background: #14724A;
+}
+
+.btn-peligro {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-peligro:hover:not(:disabled) {
+  background: #B93838;
+}
+
+/* Botón con borde (acciones secundarias) */
+.btn-borde {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.btn-borde:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.btn-borde-peligro {
+  background: var(--color-surface);
+  border-color: #F3C4C4;
+  color: var(--color-danger);
+}
+
+.btn-borde-peligro:hover:not(:disabled) {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+}
+
+/* Botón fantasma (solo texto) */
+.btn-fantasma {
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.btn-fantasma:hover:not(:disabled) {
+  background: #EEF2F6;
+  color: var(--color-text);
+}
+
+/* Tamaño compacto para tablas */
+.btn-sm {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   FORMULARIOS
+   ============================================================ */
+
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-family: var(--font-titulos);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 11px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 146, 214, 0.12);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #A0AEC0;
+}
+
+.form-error {
+  font-size: 12px;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+  animation: modal-fade 0.15s ease;
+}
+
+.modal-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modal-subir 0.2s ease;
+}
+
+.modal-card-ancha {
+  max-width: 640px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px 0 24px;
+}
+
+.modal-icono {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.modal-icono-peligro {
+  background: var(--color-danger-bg);
+}
+
+.modal-icono-info {
+  background: var(--color-info-bg);
+}
+
+.modal-icono-exito {
+  background: var(--color-success-bg);
+}
+
+.modal-titulo {
+  font-family: var(--font-titulos);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.modal-cuerpo {
+  padding: 14px 24px 20px 24px;
+}
+
+.modal-texto {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.modal-texto strong {
+  color: var(--color-text);
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 24px 22px 24px;
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-subir {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================================
+   ALERTAS / MENSAJES
+   ============================================================ */
+
+.alerta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  animation: modal-fade 0.2s ease;
+}
+
+.alerta-exito {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid #BFE8D2;
+}
+
+.alerta-error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid #F3C4C4;
+}
+
+.alerta-advertencia {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid #F0DCA8;
+}
+
+/* ============================================================
+   CARDS Y ESTADOS VACÍOS
+   ============================================================ */
+
+.card-pro {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.vacio-pro {
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--color-text-muted);
+}
+
+.vacio-pro-icono {
+  font-size: 44px;
+  margin-bottom: 12px;
+}
+
+.vacio-pro-texto {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+
+.barra-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   MATERIAL SYMBOLS (iconos vectoriales estilo MedCare)
+   ============================================================ */
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 420, "GRAD" 0, "opsz" 24;
+}

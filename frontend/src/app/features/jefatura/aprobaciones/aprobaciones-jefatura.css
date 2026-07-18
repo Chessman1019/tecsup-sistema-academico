@@ -1,0 +1,103 @@
+.aprobaciones-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ===== Badge en el título ===== */
+.pagina-titulo .badge {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* ===== Lista de aprobaciones ===== */
+.aprobaciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.aprobacion-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.15s ease;
+}
+
+.aprobacion-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.aprobacion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.aprobacion-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.aprobacion-fecha {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.aprobacion-titulo {
+  font-family: var(--font-titulos);
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 2px 0 0 0;
+  letter-spacing: -0.01em;
+}
+
+.aprobacion-descripcion {
+  font-size: 13.5px;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.aprobacion-relacionados {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.aprobacion-relacion {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+/* ===== Acciones de decisión ===== */
+.aprobacion-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #EEF2F6;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* ===== Móvil ===== */
+@media (max-width: 520px) {
+  .aprobacion-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .aprobacion-acciones .btn {
+    width: 100%;
+  }
+}

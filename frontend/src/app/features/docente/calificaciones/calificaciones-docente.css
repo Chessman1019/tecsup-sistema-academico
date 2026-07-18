@@ -1,0 +1,152 @@
+.calificaciones-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== Grid de horarios seleccionables ===== */
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.horario-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.horario-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.horario-card-activo {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(0, 146, 214, 0.12);
+}
+
+.horario-card-curso {
+  font-family: var(--font-titulos);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.horario-card-detalle {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* ===== Barra de evaluación ===== */
+.evaluacion-barra {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  flex-wrap: wrap;
+}
+
+.evaluacion-select-grupo {
+  flex: 1;
+  min-width: 240px;
+  margin-bottom: 0;
+}
+
+/* ===== Celda de estudiante ===== */
+.estudiante-celda {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.estudiante-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-family: var(--font-titulos);
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.th-centrado {
+  text-align: center !important;
+}
+
+/* ===== Input de nota ===== */
+.celda-nota {
+  text-align: center;
+}
+
+.input-nota {
+  width: 90px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-titulos);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.input-nota:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 146, 214, 0.12);
+}
+
+.input-nota::placeholder {
+  color: #CBD5E1;
+  font-weight: 400;
+}
+
+.input-nota.nota-aprobada {
+  background: var(--color-success-bg);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.input-nota.nota-desaprobada {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* ===== Acciones finales ===== */
+.acciones-finales {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* ===== Móvil ===== */
+@media (max-width: 640px) {
+  .evaluacion-barra {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .acciones-finales .btn {
+    width: 100%;
+  }
+}

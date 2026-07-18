@@ -1,0 +1,70 @@
+<div class="dashboard">
+
+  @if (authService.currentUser(); as usuario) {
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Bienvenido, {{ usuario.username }}</h1>
+      <p class="dashboard-subtitle">
+        Panel del <strong>Docente</strong> — Sistema de Gestión Académica TECSUP
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-primary">📚</div>
+        <div class="stat-content">
+          <div class="stat-label">Cursos Asignados</div>
+          @if (cargando()) {
+            <div class="stat-value stat-loading">...</div>
+          } @else {
+            <div class="stat-value">{{ totalCursos() }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-secondary">🗓️</div>
+        <div class="stat-content">
+          <div class="stat-label">Horas Semanales</div>
+          @if (cargando()) {
+            <div class="stat-value stat-loading">...</div>
+          } @else {
+            <div class="stat-value">{{ totalHorasSemanales() }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <section class="accesos-section">
+      <h2 class="section-title">Accesos rápidos</h2>
+      <div class="accesos-grid">
+        @for (acceso of accesosRapidos; track acceso.ruta) {
+          <a [routerLink]="acceso.ruta" class="acceso-card">
+            <div class="acceso-icon">{{ acceso.icono }}</div>
+            <div class="acceso-info">
+              <div class="acceso-etiqueta">{{ acceso.etiqueta }}</div>
+              <div class="acceso-descripcion">{{ acceso.descripcion }}</div>
+            </div>
+            <div class="acceso-arrow">→</div>
+          </a>
+        }
+      </div>
+    </section>
+
+    @if (!cargando() && horarios().length > 0) {
+      <section class="clases-section">
+        <h2 class="section-title">Mis clases</h2>
+        <div class="clases-list">
+          @for (h of horarios(); track h.idHorario) {
+            <div class="clase-item">
+              <span class="clase-dia">{{ obtenerNombreDia(h.diaSemana) }}</span>
+              <span class="clase-curso">{{ h.nombreCurso }}</span>
+              <span class="clase-hora">{{ h.horaInicio }} - {{ h.horaFin }}</span>
+              <span class="clase-aula">Aula {{ h.codigoAula }}</span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+
+</div>

@@ -1,0 +1,426 @@
+.login-page {
+  min-height: 100svh;
+  display: flex;
+  background: linear-gradient(135deg, #E8F3FA 0%, #D9EDF8 50%, #E4F1F9 100%);
+}
+
+/* ===================== Panel izquierdo: carrusel (52% como MedCare) ===================== */
+.carrusel-panel {
+  flex: 0 0 52%;
+  min-height: 100svh;
+  position: relative;
+  overflow: hidden;
+}
+
+.carrusel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.slide-activo {
+  opacity: 1;
+}
+
+.slide-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(10, 22, 40, 0.72) 0%, rgba(0, 108, 165, 0.55) 50%, rgba(10, 22, 40, 0.70) 100%);
+}
+
+.carrusel-contenido {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 48px;
+}
+
+.carrusel-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icono {
+  font-size: 36px;
+  color: #ffffff;
+}
+
+.logo-titulo {
+  font-family: var(--font-titulos);
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.logo-subtitulo {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.carrusel-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 400px;
+}
+
+.carrusel-titulo {
+  font-family: var(--font-titulos);
+  font-size: 40px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+  margin: 0 0 14px 0;
+}
+
+.carrusel-descripcion {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.carrusel-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 30px;
+  height: 5px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.dot-activo {
+  background: #ffffff;
+  width: 46px;
+}
+
+/* ===================== Panel derecho: card a todo el alto (como MedCare) ===================== */
+.login-panel {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.login-tarjeta {
+  width: 100%;
+  max-width: 600px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid rgba(0, 146, 214, 0.12);
+  border-radius: 28px;
+  padding: 58px 52px;
+  box-shadow: 0 20px 60px rgba(0, 108, 165, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* ===================== Candado ===================== */
+.login-icono-candado {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0092D6 0%, #006CA5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px auto;
+  box-shadow: 0 10px 24px rgba(0, 146, 214, 0.35);
+}
+
+.candado-icono {
+  font-size: 28px;
+  color: #ffffff;
+}
+
+.login-titulo {
+  font-family: var(--font-titulos);
+  font-size: 28px;
+  font-weight: 800;
+  color: #0A1628;
+  text-align: center;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px 0;
+}
+
+.login-subtitulo {
+  font-size: 14px;
+  color: #64748B;
+  text-align: center;
+  margin: 0 0 28px 0;
+}
+
+/* ===================== Tabs de rol ===================== */
+.role-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: #EEF2F6;
+  border-radius: 14px;
+  padding: 5px;
+  margin-bottom: 26px;
+}
+
+.role-tab {
+  font-family: var(--font-titulos);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 6px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.role-tab:hover {
+  color: #0A1628;
+}
+
+.role-tab-activo {
+  background: #0092D6;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 146, 214, 0.3);
+}
+
+/* ===================== Formulario ===================== */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group label {
+  font-family: var(--font-titulos);
+  font-size: 13px;
+  font-weight: 700;
+  color: #0A1628;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icono {
+  position: absolute;
+  left: 15px;
+  font-size: 20px;
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px 46px;
+  border: 1.5px solid #DCE7F0;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: var(--font-family);
+  color: #0A1628;
+  background: #F5F9FC;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.input-wrapper input:focus {
+  border-color: #0092D6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 146, 214, 0.10);
+}
+
+.input-wrapper input::placeholder {
+  color: #A0AEC0;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  color: #94A3B8;
+  transition: color 0.15s;
+}
+
+.toggle-password:hover {
+  color: #0092D6;
+}
+
+.toggle-password .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* ===================== Error ===================== */
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #FDECEC;
+  border: 1px solid #F5C6CB;
+  color: #B93838;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 12px;
+  line-height: 1.4;
+}
+
+.error-icono {
+  font-size: 18px;
+  flex-shrink: 0;
+  color: #D64545;
+}
+
+/* ===================== Botón submit (como MedCare) ===================== */
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-titulos);
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  background: #0092D6;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 24px;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 4px 16px rgba(0, 146, 214, 0.28);
+  transition: background 0.2s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #006CA5;
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-submit-icono {
+  font-size: 20px;
+}
+
+/* ===================== Footer ===================== */
+.login-footer {
+  font-size: 13px;
+  color: #94A3B8;
+  text-align: center;
+  margin: 24px 0 0 0;
+}
+
+/* ===================== Responsive (breakpoints de MedCare) ===================== */
+@media (max-height: 760px) and (min-width: 901px) {
+  .carrusel-contenido {
+    padding: 32px 42px;
+  }
+
+  .login-tarjeta {
+    padding: 34px 44px;
+  }
+}
+
+@media (max-width: 900px) {
+  .login-page {
+    display: block;
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  .carrusel-panel {
+    min-height: 320px;
+    flex: none;
+  }
+
+  .carrusel-contenido {
+    min-height: 320px;
+    padding: 28px 24px 82px 24px;
+  }
+
+  .carrusel-texto {
+    max-width: 520px;
+    min-height: 0;
+  }
+
+  .carrusel-titulo {
+    font-size: 26px;
+  }
+
+  .login-panel {
+    position: relative;
+    z-index: 3;
+    margin-top: -58px;
+    padding: 0 16px 24px 16px;
+    overflow: visible;
+  }
+
+  .login-tarjeta {
+    min-height: auto;
+    flex: none;
+    padding: 32px 24px 28px 24px;
+    border-radius: 24px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .carrusel-panel {
+    min-height: 285px;
+  }
+
+  .carrusel-contenido {
+    min-height: 285px;
+    padding: 22px 20px 78px 20px;
+  }
+
+  .carrusel-titulo {
+    font-size: 24px;
+  }
+
+  .login-tarjeta {
+    padding: 28px 18px 24px 18px;
+    border-radius: 22px;
+  }
+
+  .role-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,186 @@
+<div class="carreras-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Carreras</h1>
+      <p class="pagina-subtitulo">Administra las carreras profesionales de la institución.</p>
+    </div>
+    <button class="btn btn-oscuro" (click)="abrirFormNuevo()">＋ Nueva Carrera</button>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (mensajeExito()) {
+    <div class="alerta alerta-exito">✓ {{ mensajeExito() }}</div>
+  }
+
+  <!-- Búsqueda -->
+  <div class="busqueda-zona">
+    <div class="busqueda-input-wrapper">
+      <span class="busqueda-icono">🔍</span>
+      <input
+        type="search"
+        class="form-input busqueda-input"
+        [ngModel]="textoBusqueda()"
+        (ngModelChange)="onBusquedaChange($event)"
+        placeholder="Buscar por nombre, código o sede..."
+      />
+    </div>
+    <span class="contador-resultados">{{ carrerasFiltradas().length }} carrera(s)</span>
+  </div>
+
+  <!-- Tabla -->
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando carreras...</p>
+    </div>
+  } @else if (carrerasFiltradas().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🎓</div>
+      <p class="vacio-pro-texto">No se encontraron carreras.</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla-pro">
+        <thead>
+          <tr>
+            <th>Carrera</th>
+            <th>Duración</th>
+            <th>Sede</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (carrera of carrerasFiltradas(); track carrera.idCarrera) {
+            <tr>
+              <td>
+                <span class="celda-principal">{{ carrera.nombre }}</span>
+                <span class="celda-secundaria">{{ carrera.codigo }}</span>
+              </td>
+              <td>{{ carrera.duracionCiclos }} ciclos</td>
+              <td>
+                @if (carrera.nombreSede) {
+                  <span class="badge badge-info">{{ carrera.nombreSede }}</span>
+                } @else {
+                  <span class="celda-secundaria">Sin sede</span>
+                }
+              </td>
+              <td>
+                @if (carrera.estado) {
+                  <span class="badge badge-exito">● Activa</span>
+                } @else {
+                  <span class="badge badge-neutro">● Inactiva</span>
+                }
+              </td>
+              <td>
+                <div class="celda-acciones">
+                  @if (carrera.estado) {
+                    <button class="btn btn-fantasma btn-sm" (click)="pedirCambioEstado(carrera)">
+                      Desactivar
+                    </button>
+                  } @else {
+                    <button class="btn btn-exito btn-sm" (click)="pedirCambioEstado(carrera)">
+                      Activar
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Modal: nueva carrera -->
+  @if (mostrandoForm()) {
+    <div class="modal-overlay" (click)="cancelarForm()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <div class="modal-icono modal-icono-info">🎓</div>
+          <h2 class="modal-titulo">Nueva Carrera</h2>
+        </div>
+
+        <div class="modal-cuerpo">
+          <div class="form-grupo">
+            <label class="form-label">Código</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="codigoNuevo()"
+              (ngModelChange)="codigoNuevo.set($event)"
+              placeholder="ej. DSI"
+            />
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">Nombre de la carrera</label>
+            <input
+              type="text"
+              class="form-input"
+              [ngModel]="nombreNuevo()"
+              (ngModelChange)="nombreNuevo.set($event)"
+              placeholder="ej. Diseño y Desarrollo de Software"
+            />
+          </div>
+
+          <div class="form-fila-doble">
+            <div class="form-grupo">
+              <label class="form-label">Duración (ciclos)</label>
+              <input
+                type="number"
+                class="form-input"
+                [ngModel]="duracionNueva()"
+                (ngModelChange)="duracionNueva.set($event)"
+                min="1"
+                max="12"
+                placeholder="ej. 6"
+              />
+            </div>
+
+            <div class="form-grupo">
+              <label class="form-label">
+                Sede <span class="form-label-nota">(opcional)</span>
+              </label>
+              <select class="form-select" [(ngModel)]="sedeSeleccionada">
+                <option value="">Sin sede asignada</option>
+                @for (sede of sedes(); track sede.idSede) {
+                  <option [value]="sede.idSede">{{ sede.nombre }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="btn btn-borde" (click)="cancelarForm()" [disabled]="guardando()">
+            Cancelar
+          </button>
+          <button class="btn btn-primario" (click)="guardar()" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Crear carrera' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Confirmación: cambiar estado -->
+  <app-modal-confirmacion
+    [visible]="carreraACambiarEstado() !== null"
+    [tipo]="carreraACambiarEstado()?.estado ? 'peligro' : 'exito'"
+    [titulo]="carreraACambiarEstado()?.estado ? 'Desactivar carrera' : 'Activar carrera'"
+    [mensaje]="carreraACambiarEstado()?.estado
+      ? '¿Deseas desactivar la carrera <strong>' + carreraACambiarEstado()?.nombre + '</strong>?'
+      : '¿Deseas activar la carrera <strong>' + carreraACambiarEstado()?.nombre + '</strong>?'"
+    [textoConfirmar]="carreraACambiarEstado()?.estado ? 'Sí, desactivar' : 'Sí, activar'"
+    [procesando]="cambiandoEstado()"
+    (confirmar)="confirmarCambioEstado()"
+    (cancelar)="carreraACambiarEstado.set(null)"
+  />
+
+</div>

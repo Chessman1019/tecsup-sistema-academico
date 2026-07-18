@@ -1,0 +1,111 @@
+.cursos-container {
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+/* ===== Zona de búsqueda ===== */
+.busqueda-zona {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.busqueda-input-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+  max-width: 420px;
+}
+
+.busqueda-icono {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.busqueda-input {
+  padding-left: 40px;
+  border-radius: 999px;
+}
+
+.contador-resultados {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ===== Catálogo en cards ===== */
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.curso-card {
+  display: flex;
+  gap: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.curso-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.curso-card-icono {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.curso-card-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.curso-card-codigo {
+  align-self: flex-start;
+}
+
+.curso-card-nombre {
+  font-family: var(--font-titulos);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin: 0;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.curso-card-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.curso-meta-item {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

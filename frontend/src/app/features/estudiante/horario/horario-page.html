@@ -1,0 +1,44 @@
+<div class="horario-container">
+
+  <div class="barra-acciones">
+    <div>
+      <h1 class="pagina-titulo">Mi Horario</h1>
+      <p class="pagina-subtitulo">Tus clases de la semana, organizadas por día.</p>
+    </div>
+  </div>
+
+  @if (mensajeError()) {
+    <div class="alerta alerta-error">⚠️ {{ mensajeError() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="card-pro vacio-pro">
+      <p class="vacio-pro-texto">Cargando tu horario...</p>
+    </div>
+  } @else if (diasConHorario().length === 0) {
+    <div class="card-pro vacio-pro">
+      <div class="vacio-pro-icono">🗓️</div>
+      <p class="vacio-pro-texto">Aún no tienes cursos matriculados con horario asignado.</p>
+    </div>
+  } @else {
+    <div class="semana-grid">
+      @for (diaInfo of diasConHorario(); track diaInfo.dia) {
+        <div class="dia-columna">
+          <div class="dia-encabezado">{{ diaInfo.dia }}</div>
+
+          <div class="dia-bloques">
+            @for (bloque of diaInfo.bloques; track bloque.idMatricula) {
+              <div class="clase-bloque">
+                <span class="clase-hora">{{ bloque.horaInicio }} – {{ bloque.horaFin }}</span>
+                <span class="clase-curso">{{ bloque.nombreCurso }}</span>
+                <span class="clase-detalle">👨‍🏫 {{ bloque.nombreDocente }}</span>
+                <span class="clase-detalle">🏫 Aula {{ bloque.codigoAula }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

@@ -1,0 +1,37 @@
+<aside class="sidebar" [class.sidebar-abierto]="abierto">
+
+  <div class="sidebar-logo">
+    <span class="material-symbols-outlined logo-icono">school</span>
+    <div>
+      <h1 class="logo-titulo">TECSUP</h1>
+      <p class="logo-subtitulo">Sistema Académico</p>
+    </div>
+  </div>
+
+  @if (authService.currentUser(); as usuario) {
+    <div class="user-card">
+      <div class="user-avatar" [style.background]="colorRol()">{{ inicialUsuario() }}</div>
+      <div class="user-datos">
+        <p class="user-nombre">{{ usuario.username }}</p>
+        <span class="user-badge" [style.background]="colorRol() + '1A'" [style.color]="colorRol()">{{ etiquetaRol() }}</span>
+      </div>
+    </div>
+  }
+
+  <nav class="sidebar-nav">
+    @for (opcion of opcionesVisibles(); track opcion.ruta) {
+      <a [routerLink]="opcion.ruta" routerLinkActive="activo" class="sidebar-link" (click)="onLinkClick()">
+        <span class="material-symbols-outlined sidebar-icon">{{ opcion.icono }}</span>
+        {{ opcion.etiqueta }}
+      </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="cerrarSesion()">
+      <span class="material-symbols-outlined sidebar-icon">logout</span>
+      Cerrar sesión
+    </button>
+  </div>
+
+</aside>
